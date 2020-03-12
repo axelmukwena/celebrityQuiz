@@ -3,6 +3,9 @@
     <string name="app_name">Celebrity Quiz</string>
     <string name="play"></string>
     <string name="settings"></string>
+
+    <string name="settings_header">Switch Difficulty Level</string>
     <string name="easy">Easy</string>
     <string name="hard">Hard</string>
+
 </resources>
