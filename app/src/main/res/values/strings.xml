@@ -1,5 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">Celebrity Quiz</string>
+    <string name="play"></string>
     <string name="settings"></string>
+    <string name="easy">Easy</string>
+    <string name="hard">Hard</string>
 </resources>
