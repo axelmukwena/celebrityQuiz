@@ -6,13 +6,14 @@
     tools:context=".MainActivity">
 
     <item
-        android:id="@+id/play"
-        android:icon="@drawable/ic_play"
+        android:id="@+id/scoreButton"
+        android:icon="@drawable/check_icon"
         app:showAsAction="ifRoom"
-        android:title="@string/play"/>
+        android:title="@string/score"/>
+
     <item
         android:id="@+id/settings"
-        android:icon="@drawable/ic_settings"
+        android:icon="@drawable/settings_icon"
         app:showAsAction="ifRoom"
         android:title="@string/settings"/>
 </menu>

@@ -1,12 +1,12 @@
 package com.example.celebrityquiz;
 
 import androidx.appcompat.app.AppCompatActivity;
-
 import android.content.Intent;
 import android.os.Bundle;
 import androidx.appcompat.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+
 
 public class MainActivity extends AppCompatActivity {
 
@@ -29,12 +29,15 @@ public class MainActivity extends AppCompatActivity {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch(item.getItemId()) {
-            case R.id.play:
-                return(true);
+            case R.id.scoreButton:
+                Intent i = new Intent(this, ScoreActivity.class);
+                this.startActivity(i);
+                finish();
+
             case R.id.settings:
-                Intent intent = new Intent(this, SettingsActivity.class);
-                this.startActivity(intent);
-                return(true);
+                Intent j = new Intent(this, SettingsActivity.class);
+                this.startActivity(j);
+                finish();
         }
         return(super.onOptionsItemSelected(item));
     }
