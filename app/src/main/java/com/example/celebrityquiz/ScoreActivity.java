@@ -15,8 +15,8 @@ public class ScoreActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_score);
 
-        Toolbar scoreToolbar = findViewById(R.id.score_toolbar);
-        setSupportActionBar(scoreToolbar);
+        Toolbar toolbar = findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
 
         if (getSupportActionBar() != null) {
             getSupportActionBar().setTitle("");
