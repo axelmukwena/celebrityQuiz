@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">Celebrity Quiz</string>
-    <string name="score"></string>
-    <string name="settings"></string>
+    <string name="score" />
+    <string name="settings" />
 
     <string name="settings_header">Level of Difficulty</string>
     <string name="easy">Easy</string>
@@ -10,5 +10,23 @@
 
     <string name="scoreContent">This is your score</string>
     <string name="score_header">Score</string>
+
+    // Celebrity options
+    <string name="questionOne">1. Who is the rock star below?</string>
+    <string name="celebrityOneKey">David Bowie</string>
+    <string-array name="celebrityOne">
+        <item>Jaimie Hendrix</item>
+        <item>David Bowie</item>
+        <item>Jim Morrison</item>
+        <item>Elvis Presley</item>
+    </string-array>
+
+    <string name="celebrityTwoKey">Elton John</string>
+    <string-array name="celebrityTwo">
+        <item>Elton John</item>
+        <item>Eric Clapton</item>
+        <item>John Lennon</item>
+        <item>Freddie Mercury</item>
+    </string-array>
 
 </resources>

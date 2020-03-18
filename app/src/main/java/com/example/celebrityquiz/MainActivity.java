@@ -4,17 +4,16 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.content.Intent;
 import android.os.Bundle;
 import androidx.appcompat.widget.Toolbar;
-import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentManager;
-import androidx.fragment.app.FragmentTransaction;
-
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 import android.view.Menu;
 import android.view.MenuItem;
 
+import java.util.ArrayList;
+
 
 public class MainActivity extends AppCompatActivity {
-
-    Fragment fragment;
+    private ArrayList<Object> arrayList = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -24,7 +23,13 @@ public class MainActivity extends AppCompatActivity {
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        addFragment();
+        RecyclerView recyclerView = findViewById(R.id.recyclerView);
+        for (int i = 0; i < 10; i++)
+            loadData();
+
+        QuizAdapter quizAdapter = new QuizAdapter(arrayList, this);
+        recyclerView.setAdapter(quizAdapter);
+        recyclerView.setLayoutManager(new LinearLayoutManager(this));
     }
 
     @Override
@@ -49,12 +54,14 @@ public class MainActivity extends AppCompatActivity {
         return(super.onOptionsItemSelected(item));
     }
 
-    public void addFragment() {
-        FragmentManager fragmentManager = getSupportFragmentManager();
-        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-
-        fragment = new RecyclerFragment();
-        fragmentTransaction.add(R.id.mainContent, fragment);
-        fragmentTransaction.commit();
+    public void loadData() {
+        arrayList.add(new Quiz("Châu Âu gồm những nước nào?",
+                new String[]{"Mỹ", "Pháp", "Anh", "Trung Quốc"}, 2));
+        arrayList.add(new Quiz("|x|=1 thi x=?",
+                new String[]{"x=1", "x=-1", "x=0"},  1));
+        arrayList.add(new Quiz("2 * 3 = ?",
+                new String[]{"48", "6", "28777"}, 1));
+        arrayList.add(new Quiz("10 - 2 + |3|=?",
+                new String[]{"172", "126", "32", "213", "43"}, 1));
     }
 }
