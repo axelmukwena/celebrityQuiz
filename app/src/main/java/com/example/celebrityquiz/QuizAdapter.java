@@ -4,9 +4,12 @@ import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.TextView;
+import android.widget.Toast;
+
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 import java.util.ArrayList;
@@ -17,7 +20,6 @@ public class QuizAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     private Context mContext;
 
     private static final int num = 1;
-
     QuizAdapter(ArrayList<Object> mArrayList, Context context) {
         this.mArrayList = mArrayList;
         this.mContext = context;
@@ -40,7 +42,8 @@ public class QuizAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
         if (getQuiz(position) == num) {
             QuizHolder q = (QuizHolder) viewHolder;
             Quiz quiz = (Quiz) object;
-            q.mViewQuestion.setText(String.format("%s. %s", questionCount, Quiz.mQuestion));
+            q.mViewQuestion.setText(String.format("%s. %s", questionCount, quiz.mQuestion));
+            q.mViewImage.setImageDrawable(quiz.mImage);
             q.createRadioButtons(quiz.mStringAnswer);
         }
     }
@@ -57,39 +60,50 @@ public class QuizAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
         return mArrayList.size();
     }
 
-    public static class QuizHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
+    public class QuizHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
         private TextView mViewQuestion;
         private RadioGroup mRadioGroup;
+        private ImageView mViewImage;
 
         QuizHolder(@NonNull View itemView) {
             super(itemView);
             mViewQuestion = itemView.findViewById(R.id.celebrityQuestion);
-            mRadioGroup = itemView.findViewById(R.id.celebrityAnswer);
+            mViewImage = itemView.findViewById(R.id.celebrityImage);
+            mRadioGroup = itemView.findViewById(R.id.celebrityOption);
         }
 
         void createRadioButtons(String[] arrayAnswer) {
             if (mRadioGroup.getChildAt(0) != null)
                 return;
-            for (int i = 0; i < arrayAnswer.length; i++)
-                mRadioGroup.addView(createRadioButtonAnswerAndSetOnClickListener(
-                        Character.toString((char) (65 + i)) + ". " + arrayAnswer[i]));
+            for (String s : arrayAnswer)
+                mRadioGroup.addView(createRadioButtonAnswerAndSetOnClickListener(s));
         }
 
         RadioButton createRadioButtonAnswerAndSetOnClickListener(String string) {
             RadioButton radioButton = new RadioButton(mContext);
             radioButton.setText(string);
-            radioButton.setTextSize(22);
             radioButton.setOnClickListener(this);
             return radioButton;
         }
 
         @Override
         public void onClick(View view) {
-            int position = getAdapterPosition();
-            Object object = mArrayList.get(position);
-            int positionOfCorrectAnswer = ((Quiz) object).mPositionCorrectAnswer;
-            RadioButton radioButton = (RadioButton) mRadioGroup.getChildAt(positionOfCorrectAnswer);
-            userAnswer[position] = radioButton.isChecked();
+            boolean checked = ((RadioButton) view).isChecked();
+
+            if (checked) {
+
+                int selectedAnswerIndex = getAdapterPosition();
+                Object object = mArrayList.get(selectedAnswerIndex);
+                String  selectedAnswer = object.toString();
+
+                String correctAnswer = ((Quiz) object).mCorrectAnswer;
+
+                if (selectedAnswer.equals(correctAnswer)) {
+                    // do something
+                } else {
+                    // do something
+                }
+            }
         }
     }
 }

@@ -1,15 +1,21 @@
 package com.example.celebrityquiz;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+
 import android.content.Intent;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import androidx.appcompat.widget.Toolbar;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.ArrayAdapter;
+import android.widget.ImageView;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 
 
 public class MainActivity extends AppCompatActivity {
@@ -24,8 +30,7 @@ public class MainActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
 
         RecyclerView recyclerView = findViewById(R.id.recyclerView);
-        for (int i = 0; i < 10; i++)
-            loadData();
+        loadData();
 
         QuizAdapter quizAdapter = new QuizAdapter(arrayList, this);
         recyclerView.setAdapter(quizAdapter);
@@ -55,13 +60,9 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void loadData() {
-        arrayList.add(new Quiz("Châu Âu gồm những nước nào?",
-                new String[]{"Mỹ", "Pháp", "Anh", "Trung Quốc"}, 2));
-        arrayList.add(new Quiz("|x|=1 thi x=?",
-                new String[]{"x=1", "x=-1", "x=0"},  1));
-        arrayList.add(new Quiz("2 * 3 = ?",
-                new String[]{"48", "6", "28777"}, 1));
-        arrayList.add(new Quiz("10 - 2 + |3|=?",
-                new String[]{"172", "126", "32", "213", "43"}, 1));
+        arrayList.add(new Quiz(getResources().getString(R.string.questionOne),
+                getResources().getDrawable(R.drawable.celebrity_one_image, null),
+                new ArrayList<>(Arrays.asList(getResources().getStringArray(R.array.celebrityOne))),
+                getResources().getString(R.string.answerOne)));
     }
 }

@@ -11,9 +11,10 @@
     <string name="scoreContent">This is your score</string>
     <string name="score_header">Score</string>
 
-    // Celebrity options
-    <string name="questionOne">1. Who is the rock star below?</string>
-    <string name="celebrityOneKey">David Bowie</string>
+    <!-- Celebrity options -->
+    <!-- Celebrity One -->
+    <string name="questionOne">Who is the rock star below?</string>
+    <string name="answerOne">David Bowie</string>
     <string-array name="celebrityOne">
         <item>Jaimie Hendrix</item>
         <item>David Bowie</item>
@@ -21,8 +22,30 @@
         <item>Elvis Presley</item>
     </string-array>
 
-    <string name="celebrityTwoKey">Elton John</string>
+    <!-- Celebrity Two -->
+    <string name="questionTwo">Who is the celebrity below?</string>
+    <string name="answerTwo">Elton John</string>
     <string-array name="celebrityTwo">
+        <item>Elton John</item>
+        <item>Eric Clapton</item>
+        <item>John Lennon</item>
+        <item>Freddie Mercury</item>
+    </string-array>
+
+    <!-- Celebrity Thre -->
+    <string name="questionThree">Who is the celebrity below?</string>
+    <string name="answerThree">Elton John</string>
+    <string-array name="celebrityThree">
+        <item>Elton John</item>
+        <item>Eric Clapton</item>
+        <item>John Lennon</item>
+        <item>Freddie Mercury</item>
+    </string-array>
+
+    <!-- Celebrity Two -->
+    <string name="questionFour">Who is the celebrity below?</string>
+    <string name="answerFour">Elton John</string>
+    <string-array name="celebrityFour">
         <item>Elton John</item>
         <item>Eric Clapton</item>
         <item>John Lennon</item>

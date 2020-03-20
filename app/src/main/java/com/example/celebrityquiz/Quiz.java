@@ -1,13 +1,17 @@
 package com.example.celebrityquiz;
+import android.graphics.drawable.Drawable;
+import java.util.ArrayList;
 
 class Quiz {
-    static String mQuestion;
+    String mQuestion;
+    Drawable mImage;
     String[] mStringAnswer;
-    int mPositionCorrectAnswer;
+    String mCorrectAnswer;
 
-    Quiz(String mQuestion, String[] mStringAnswer, int mPositionCorrectAnswer) {
-        Quiz.mQuestion = mQuestion;
-        this.mStringAnswer = mStringAnswer;
-        this.mPositionCorrectAnswer = mPositionCorrectAnswer;
+    Quiz(String mQuestion, Drawable mImage, ArrayList<String> mStringAnswer, String mCorrectAnswer) {
+        this.mQuestion = mQuestion;
+        this.mImage = mImage;
+        this.mStringAnswer = mStringAnswer.toArray(new String[0]);
+        this.mCorrectAnswer = mCorrectAnswer;
     }
 }
