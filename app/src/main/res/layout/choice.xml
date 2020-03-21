@@ -12,23 +12,31 @@
         android:text="@string/app_name"
         android:textStyle="bold"
         android:layout_marginTop="15dp"
-        android:layout_marginBottom="10dp"/>
+        android:layout_marginBottom="10dp"
+        android:layout_marginStart="30dp"/>
 
     <ImageView
         android:id="@+id/celebrityImage"
         android:layout_width="100dp"
         android:layout_height="100dp"
-        android:layout_marginStart="30dp"
+        android:layout_marginStart="50dp"
         android:layout_marginTop="5dp"
-        android:layout_marginBottom="15dp"
+        android:layout_marginBottom="10dp"
         android:contentDescription="@null"
-        android:foreground="@drawable/image_shape"
+        android:background="@drawable/image_shape"
+        android:elevation="3dp"
         tools:ignore="UnusedAttribute" />
 
     <RadioGroup
         android:id="@+id/celebrityOption"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical" />
+        android:orientation="vertical"
+        android:layout_marginTop="15dp"
+        android:layout_marginBottom="15dp"
+        android:layout_marginStart="30dp"/>
+
+    <View style="@style/HorizontalDivider"
+        android:id="@+id/horizontalDivider"/>
 
 </LinearLayout>

@@ -8,7 +8,6 @@ import android.widget.ImageView;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
@@ -16,14 +15,12 @@ import java.util.ArrayList;
 
 public class QuizAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     private ArrayList<Object> mArrayList;
-    private boolean[] userAnswer;
     private Context mContext;
 
-    private static final int num = 1;
     QuizAdapter(ArrayList<Object> mArrayList, Context context) {
         this.mArrayList = mArrayList;
         this.mContext = context;
-        userAnswer = new boolean[getItemCount()];
+        getItemCount();
     }
 
     @NonNull
@@ -36,23 +33,11 @@ public class QuizAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     @Override
     public void onBindViewHolder(@NonNull RecyclerView.ViewHolder viewHolder, int position) {
 
-        Object object = mArrayList.get(position);
-        int questionCount = position + 1;
-
-        if (getQuiz(position) == num) {
-            QuizHolder q = (QuizHolder) viewHolder;
-            Quiz quiz = (Quiz) object;
-            q.mViewQuestion.setText(String.format("%s. %s", questionCount, quiz.mQuestion));
-            q.mViewImage.setImageDrawable(quiz.mImage);
-            q.createRadioButtons(quiz.mStringAnswer);
-        }
-    }
-
-    private int getQuiz(int position) {
-        Object object = mArrayList.get(position);
-        if (object instanceof Quiz)
-            return num;
-        return super.getItemViewType(position);
+        Quiz object = (Quiz) mArrayList.get(position);
+        QuizHolder q = (QuizHolder) viewHolder;
+        q.mViewQuestion.setText(String.format("%s. %s", position + 1, object.mQuestion));
+        q.mViewImage.setImageDrawable(object.mImage);
+        q.createRadioButtons(object.mStringAnswer);
     }
 
     @Override
@@ -70,13 +55,15 @@ public class QuizAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
             mViewQuestion = itemView.findViewById(R.id.celebrityQuestion);
             mViewImage = itemView.findViewById(R.id.celebrityImage);
             mRadioGroup = itemView.findViewById(R.id.celebrityOption);
+            itemView.findViewById(R.id.horizontalDivider);
         }
 
         void createRadioButtons(String[] arrayAnswer) {
             if (mRadioGroup.getChildAt(0) != null)
                 return;
-            for (String s : arrayAnswer)
-                mRadioGroup.addView(createRadioButtonAnswerAndSetOnClickListener(s));
+            for (int i = 0; i < arrayAnswer.length; i++) {
+                mRadioGroup.addView(createRadioButtonAnswerAndSetOnClickListener(arrayAnswer[i]));
+            }
         }
 
         RadioButton createRadioButtonAnswerAndSetOnClickListener(String string) {
@@ -93,10 +80,10 @@ public class QuizAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
             if (checked) {
 
                 int selectedAnswerIndex = getAdapterPosition();
-                Object object = mArrayList.get(selectedAnswerIndex);
-                String  selectedAnswer = object.toString();
+                Quiz object = (Quiz) mArrayList.get(selectedAnswerIndex);
 
-                String correctAnswer = ((Quiz) object).mCorrectAnswer;
+                String  selectedAnswer = object.toString();
+                String correctAnswer = object.mCorrectAnswer;
 
                 if (selectedAnswer.equals(correctAnswer)) {
                     // do something
