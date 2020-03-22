@@ -2,6 +2,7 @@ package com.example.celebrityquiz;
 
 import androidx.appcompat.app.AppCompatActivity;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import androidx.appcompat.widget.Toolbar;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -10,6 +11,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Iterator;
 
 
 public class MainActivity extends AppCompatActivity {
@@ -29,6 +31,7 @@ public class MainActivity extends AppCompatActivity {
         QuizAdapter quizAdapter = new QuizAdapter(arrayList, this);
         recyclerView.setAdapter(quizAdapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
+
     }
 
     @Override
@@ -94,5 +97,28 @@ public class MainActivity extends AppCompatActivity {
                 getResources().getDrawable(R.drawable.celebrity_ten_image, null),
                 new ArrayList<>(Arrays.asList(getResources().getStringArray(R.array.celebrityTen))),
                 getResources().getString(R.string.answerTen)));
+
+        // Get switchState from Settings activity
+        SharedPreferences mPrefs = getSharedPreferences("save", MODE_PRIVATE);
+        boolean switchState = mPrefs.getBoolean("value", false);
+
+        // Set limit of arrayList objects depending on level of difficulty
+        int limit;
+        if (!switchState)
+            limit = 6;
+         else
+            limit = 10;
+
+        Iterator<Object> iterator = arrayList.iterator();
+        int count = 0;
+
+        // Iterating through the list of integers
+        while (iterator.hasNext()) {
+            iterator.next();
+            count++;
+            // Check if limit is reached
+            if (count > limit)
+                iterator.remove();
+        }
     }
 }

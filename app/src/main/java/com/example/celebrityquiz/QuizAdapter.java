@@ -16,11 +16,23 @@ import java.util.ArrayList;
 public class QuizAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     private ArrayList<Object> mArrayList;
     private Context mContext;
+    private CurrentScore mCurrentScore;
 
     QuizAdapter(ArrayList<Object> mArrayList, Context context) {
         this.mArrayList = mArrayList;
         this.mContext = context;
         getItemCount();
+    }
+
+    int correct = 0;
+    /*QuizAdapter(CurrentScore mCurrentScore, Context context, int correct){
+        this.mCurrentScore = mCurrentScore;
+        this.mContext = context;
+        this.correct = correct;
+    }*/
+
+    public interface CurrentScore {
+        void CurrentScoreMethod(QuizHolder quizHolder, int score);
     }
 
     @NonNull
@@ -60,9 +72,9 @@ public class QuizAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
         void createRadioButtons(String[] arrayAnswer) {
             if (mRadioGroup.getChildAt(0) != null)
-                return;
-            for (int i = 0; i < arrayAnswer.length; i++) {
-                mRadioGroup.addView(createRadioButtonAnswerAndSetOnClickListener(arrayAnswer[i]));
+                mRadioGroup.removeAllViews();
+            for (String s : arrayAnswer) {
+                mRadioGroup.addView(createRadioButtonAnswerAndSetOnClickListener(s));
             }
         }
 
@@ -78,17 +90,19 @@ public class QuizAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
             boolean checked = ((RadioButton) view).isChecked();
 
             if (checked) {
+                int radioButtonID = mRadioGroup.getCheckedRadioButtonId();
+                View radioButton = mRadioGroup.findViewById(radioButtonID);
+                int selectedAnswerIndex = mRadioGroup.indexOfChild(radioButton);
+                RadioButton r = (RadioButton) mRadioGroup.getChildAt(selectedAnswerIndex);
+                String  selectedAnswer = r.getText().toString();
 
-                int selectedAnswerIndex = getAdapterPosition();
-                Quiz object = (Quiz) mArrayList.get(selectedAnswerIndex);
-
-                String  selectedAnswer = object.toString();
-                String correctAnswer = object.mCorrectAnswer;
+                int position = getAdapterPosition();
+                Object object = mArrayList.get(position);
+                String correctAnswer = ((Quiz) object).mCorrectAnswer;
 
                 if (selectedAnswer.equals(correctAnswer)) {
-                    // do something
-                } else {
-                    // do something
+                    correct++;
+                    mCurrentScore.CurrentScoreMethod(this, correct);
                 }
             }
         }

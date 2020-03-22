@@ -4,6 +4,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.ImageButton;
@@ -33,14 +34,26 @@ public class SettingsActivity extends AppCompatActivity {
             }
         });
 
-        Switch switchValue = findViewById(R.id.switchLevel);
+        final Switch switchValue = findViewById(R.id.switchLevel);
+
+        SharedPreferences sharedPreferences = getSharedPreferences("save", MODE_PRIVATE );
+        switchValue.setChecked(sharedPreferences.getBoolean("value", false));
+
         switchValue.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 if (isChecked) {
-                    // Set level to hard
+                    SharedPreferences.Editor editor = getSharedPreferences(
+                            "save", MODE_PRIVATE).edit();
+                    editor.putBoolean("value", true);
+                    editor.apply();
+                    switchValue.setChecked(true);
                 } else {
-                    // Set level to easy
+                    SharedPreferences.Editor editor = getSharedPreferences(
+                            "save", MODE_PRIVATE).edit();
+                    editor.putBoolean("value", false);
+                    editor.apply();
+                    switchValue.setChecked(false);
                 }
             }
         });
