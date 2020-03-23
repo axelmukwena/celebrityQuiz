@@ -25,6 +25,7 @@ public class SettingsActivity extends AppCompatActivity {
             getSupportActionBar().setTitle("");
         }
 
+        // Create back button and start mainActivity once clicked
         ImageButton backArrow = findViewById(R.id.backArrowSettings);
         backArrow.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -36,9 +37,11 @@ public class SettingsActivity extends AppCompatActivity {
 
         final Switch switchValue = findViewById(R.id.switchLevel);
 
+        // Interface instance to access and modify switchState / level of difficulty | default mode; false
         SharedPreferences sharedPreferences = getSharedPreferences("saveLevel", MODE_PRIVATE);
         switchValue.setChecked(sharedPreferences.getBoolean("value", false));
 
+        // Use switch to change level of difficulty, once clicked
         switchValue.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
@@ -47,13 +50,13 @@ public class SettingsActivity extends AppCompatActivity {
                             "saveLevel", MODE_PRIVATE).edit();
                     editor.putBoolean("value", true);
                     editor.apply();
-                    switchValue.setChecked(true);
+                    switchValue.setChecked(true); // Set saved value (hard) forever
                 } else {
                     SharedPreferences.Editor editor = getSharedPreferences(
                             "saveLevel", MODE_PRIVATE).edit();
                     editor.putBoolean("value", false);
                     editor.apply();
-                    switchValue.setChecked(false);
+                    switchValue.setChecked(false); // Set saved value (easy) forever
                 }
             }
         });

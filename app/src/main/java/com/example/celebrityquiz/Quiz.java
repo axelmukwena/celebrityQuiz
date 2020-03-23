@@ -2,6 +2,7 @@ package com.example.celebrityquiz;
 import android.graphics.drawable.Drawable;
 import java.util.ArrayList;
 
+// Bridge class connecting MainActivity with QuizAdapter
 class Quiz {
     String mQuestion;
     Drawable mImage;

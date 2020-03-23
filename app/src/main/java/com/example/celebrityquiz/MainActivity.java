@@ -15,25 +15,31 @@ import java.util.Iterator;
 
 
 public class MainActivity extends AppCompatActivity {
+    // Declare lists
     ArrayList<Object> arrayList = new ArrayList<>();
-    public int score = 4;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        // Set toolbar
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
         RecyclerView recyclerView = findViewById(R.id.recyclerView);
+
+        // Load all details | see function for more details
         loadData();
 
+        // Get adapter and set data to recyclerView
         QuizAdapter quizAdapter = new QuizAdapter(arrayList, this);
         recyclerView.setAdapter(quizAdapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
     }
 
+    // Create menu options
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
@@ -41,6 +47,7 @@ public class MainActivity extends AppCompatActivity {
         return true;
     }
 
+    // Switch case for menu options based on user selection
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch(item.getItemId()) {
@@ -56,7 +63,12 @@ public class MainActivity extends AppCompatActivity {
         return(super.onOptionsItemSelected(item));
     }
 
+    // Load data to bridge class Quiz.
     public void loadData() {
+
+        /* Each arrayList added contains 3 arguments: Question, Image, arrayList
+         * of answerOptions and correctAnswer | see string source choice.xml and
+         * images in drawables */
         arrayList.add(new Quiz(getResources().getString(R.string.questionOne),
                 getResources().getDrawable(R.drawable.celebrity_one_image, null),
                 new ArrayList<>(Arrays.asList(getResources().getStringArray(R.array.celebrityOne))),
@@ -98,11 +110,14 @@ public class MainActivity extends AppCompatActivity {
                 new ArrayList<>(Arrays.asList(getResources().getStringArray(R.array.celebrityTen))),
                 getResources().getString(R.string.answerTen)));
 
-        // Get switchState from Settings activity
+        // Get switchState (level of difficult) from Settings activity using boolean
+        // Default state is Easy Mode
         SharedPreferences mPrefs = getSharedPreferences("saveLevel", MODE_PRIVATE);
         boolean switchState = mPrefs.getBoolean("value", false);
 
-        // Set limit of arrayList objects depending on level of difficulty
+        /* Set limit of arrayList objects (6 or 10) depending on level of difficulty (switchState)
+         * by removing some elements from arrayList (i.e if limit is 6, remove until count is not less
+         * than limit) */
         int limit;
         if (!switchState)
             limit = 6;

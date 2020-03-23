@@ -10,6 +10,7 @@
         android:id="@+id/settings_toolbar"
         layout="@layout/settings_toolbar" />
 
+    <!-- Switch toggle display -->
     <Switch
         android:id="@+id/switchLevel"
         android:layout_width="wrap_content"

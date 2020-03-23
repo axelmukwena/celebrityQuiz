@@ -11,6 +11,7 @@
         android:id="@+id/scoreToolbar"
         layout="@layout/score_toolbar" />
 
+    <!-- Score view background -->
     <ImageView
         android:id="@+id/scoreViewBackground"
         android:layout_width="100dp"
@@ -24,6 +25,7 @@
         app:layout_constraintTop_toBottomOf="@+id/scoreToolbar"
         app:srcCompat="@drawable/button_rounded" />
 
+    <!-- Score view divider -->
     <View
         android:id="@+id/scoreViewDivider"
         style="@style/HorizontalDivider"
@@ -35,6 +37,7 @@
         app:layout_constraintStart_toStartOf="@+id/scoreViewBackground"
         app:layout_constraintTop_toTopOf="@+id/scoreViewBackground" />
 
+    <!-- Score view display -->
     <TextView
         android:id="@+id/scoreTextView"
         android:layout_width="wrap_content"
@@ -49,13 +52,13 @@
         app:layout_constraintHorizontal_bias="0.487"
         app:layout_constraintStart_toStartOf="parent" />
 
+    <!-- Total Score view display -->
     <TextView
         android:id="@+id/scoreTotalTextView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="176dp"
         android:layout_marginEnd="176dp"
-        android:text="10"
         android:textColor="@color/colorPrimary"
         android:textSize="30sp"
         android:textStyle="bold"
@@ -63,5 +66,20 @@
         app:layout_constraintHorizontal_bias="0.487"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/scoreViewDivider" />
+
+    <!-- Well done view display -->
+    <ImageView
+        android:id="@+id/wellDoneImage"
+        android:layout_width="200dp"
+        android:layout_height="200dp"
+        android:layout_marginStart="106dp"
+        android:layout_marginTop="130dp"
+        android:layout_marginEnd="106dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/scoreViewBackground"
+        app:srcCompat="@drawable/well_done"
+        android:contentDescription="@null" />
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>

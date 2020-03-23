@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <!-- Titles/Utility -->
     <string name="app_name">Celebrity Quiz</string>
     <string name="score" />
     <string name="settings" />

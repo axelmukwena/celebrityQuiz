@@ -5,16 +5,17 @@
     android:layout_height="wrap_content"
     android:orientation="vertical">
 
+    <!-- Question view -->
     <TextView
         android:id="@+id/celebrityQuestion"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="@string/app_name"
         android:textStyle="bold"
         android:layout_marginTop="15dp"
         android:layout_marginBottom="10dp"
         android:layout_marginStart="30dp"/>
 
+    <!-- Celebrity image view -->
     <ImageView
         android:id="@+id/celebrityImage"
         android:layout_width="100dp"
@@ -27,6 +28,7 @@
         android:elevation="3dp"
         tools:ignore="UnusedAttribute" />
 
+    <!-- Radio group view | see strings.xml -->
     <RadioGroup
         android:id="@+id/celebrityOption"
         android:layout_width="match_parent"
