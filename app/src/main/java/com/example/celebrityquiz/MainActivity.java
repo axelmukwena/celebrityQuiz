@@ -16,6 +16,7 @@ import java.util.Iterator;
 
 public class MainActivity extends AppCompatActivity {
     ArrayList<Object> arrayList = new ArrayList<>();
+    public int score = 4;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -31,7 +32,6 @@ public class MainActivity extends AppCompatActivity {
         QuizAdapter quizAdapter = new QuizAdapter(arrayList, this);
         recyclerView.setAdapter(quizAdapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
-
     }
 
     @Override
@@ -99,7 +99,7 @@ public class MainActivity extends AppCompatActivity {
                 getResources().getString(R.string.answerTen)));
 
         // Get switchState from Settings activity
-        SharedPreferences mPrefs = getSharedPreferences("save", MODE_PRIVATE);
+        SharedPreferences mPrefs = getSharedPreferences("saveLevel", MODE_PRIVATE);
         boolean switchState = mPrefs.getBoolean("value", false);
 
         // Set limit of arrayList objects depending on level of difficulty

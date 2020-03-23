@@ -36,7 +36,7 @@ public class SettingsActivity extends AppCompatActivity {
 
         final Switch switchValue = findViewById(R.id.switchLevel);
 
-        SharedPreferences sharedPreferences = getSharedPreferences("save", MODE_PRIVATE );
+        SharedPreferences sharedPreferences = getSharedPreferences("saveLevel", MODE_PRIVATE);
         switchValue.setChecked(sharedPreferences.getBoolean("value", false));
 
         switchValue.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
@@ -44,13 +44,13 @@ public class SettingsActivity extends AppCompatActivity {
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 if (isChecked) {
                     SharedPreferences.Editor editor = getSharedPreferences(
-                            "save", MODE_PRIVATE).edit();
+                            "saveLevel", MODE_PRIVATE).edit();
                     editor.putBoolean("value", true);
                     editor.apply();
                     switchValue.setChecked(true);
                 } else {
                     SharedPreferences.Editor editor = getSharedPreferences(
-                            "save", MODE_PRIVATE).edit();
+                            "saveLevel", MODE_PRIVATE).edit();
                     editor.putBoolean("value", false);
                     editor.apply();
                     switchValue.setChecked(false);

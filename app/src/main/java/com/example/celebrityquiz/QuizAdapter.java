@@ -1,6 +1,7 @@
 package com.example.celebrityquiz;
 
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -10,29 +11,18 @@ import android.widget.RadioGroup;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.preference.PreferenceManager;
 import androidx.recyclerview.widget.RecyclerView;
 import java.util.ArrayList;
 
 public class QuizAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     private ArrayList<Object> mArrayList;
     private Context mContext;
-    private CurrentScore mCurrentScore;
 
     QuizAdapter(ArrayList<Object> mArrayList, Context context) {
         this.mArrayList = mArrayList;
         this.mContext = context;
         getItemCount();
-    }
-
-    int correct = 0;
-    /*QuizAdapter(CurrentScore mCurrentScore, Context context, int correct){
-        this.mCurrentScore = mCurrentScore;
-        this.mContext = context;
-        this.correct = correct;
-    }*/
-
-    public interface CurrentScore {
-        void CurrentScoreMethod(QuizHolder quizHolder, int score);
     }
 
     @NonNull
@@ -61,6 +51,11 @@ public class QuizAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
         private TextView mViewQuestion;
         private RadioGroup mRadioGroup;
         private ImageView mViewImage;
+        int correct = 0;
+
+        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(mContext);
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        int hey = sharedPreferences.getInt("score", 0);
 
         QuizHolder(@NonNull View itemView) {
             super(itemView);
@@ -102,7 +97,8 @@ public class QuizAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
                 if (selectedAnswer.equals(correctAnswer)) {
                     correct++;
-                    mCurrentScore.CurrentScoreMethod(this, correct);
+                    editor.putInt("score", correct);
+                    editor.apply();
                 }
             }
         }
