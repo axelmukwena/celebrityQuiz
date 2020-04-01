@@ -9,15 +9,32 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import android.view.Menu;
 import android.view.MenuItem;
+
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
+
+import org.jetbrains.annotations.NotNull;
+import org.litepal.LitePal;
+
+import java.io.IOException;
+import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Iterator;
+import java.util.List;
+import java.util.Objects;
+
+import okhttp3.Call;
+import okhttp3.Callback;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.Response;
 
 
 public class MainActivity extends AppCompatActivity {
     // Declare lists
-    ArrayList<Object> arrayList = new ArrayList<>();
-
+    List<Quiz> list = new ArrayList<>();
+    String jsonUrl = "https://api.jsonbin.io/b/5e84f2315a6c891f427990ec";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -30,11 +47,11 @@ public class MainActivity extends AppCompatActivity {
 
         RecyclerView recyclerView = findViewById(R.id.recyclerView);
 
-        // Load all details | see function for more details
+        // Get data from the Internet | see function for more details
         loadData();
 
         // Get adapter and set data to recyclerView
-        QuizAdapter quizAdapter = new QuizAdapter(arrayList, this);
+        QuizAdapter quizAdapter = new QuizAdapter(list, this);
         recyclerView.setAdapter(quizAdapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
     }
@@ -63,52 +80,48 @@ public class MainActivity extends AppCompatActivity {
         return(super.onOptionsItemSelected(item));
     }
 
-    // Load data to bridge class Quiz.
+    // Load data to from internet
     public void loadData() {
 
-        /* Each arrayList added contains 3 arguments: Question, Image, arrayList
-         * of answerOptions and correctAnswer | see string source choice.xml and
-         * images in drawables */
-        arrayList.add(new Quiz(getResources().getString(R.string.questionOne),
-                getResources().getDrawable(R.drawable.celebrity_one_image, null),
-                new ArrayList<>(Arrays.asList(getResources().getStringArray(R.array.celebrityOne))),
-                getResources().getString(R.string.answerOne)));
-        arrayList.add(new Quiz(getResources().getString(R.string.questionTwo),
-                getResources().getDrawable(R.drawable.celebrity_two_image, null),
-                new ArrayList<>(Arrays.asList(getResources().getStringArray(R.array.celebrityTwo))),
-                getResources().getString(R.string.answerTwo)));
-        arrayList.add(new Quiz(getResources().getString(R.string.questionThree),
-                getResources().getDrawable(R.drawable.celebrity_three_image, null),
-                new ArrayList<>(Arrays.asList(getResources().getStringArray(R.array.celebrityThree))),
-                getResources().getString(R.string.answerThree)));
-        arrayList.add(new Quiz(getResources().getString(R.string.questionFour),
-                getResources().getDrawable(R.drawable.celebrity_four_image, null),
-                new ArrayList<>(Arrays.asList(getResources().getStringArray(R.array.celebrityFour))),
-                getResources().getString(R.string.answerFour)));
-        arrayList.add(new Quiz(getResources().getString(R.string.questionFive),
-                getResources().getDrawable(R.drawable.celebrity_five_image, null),
-                new ArrayList<>(Arrays.asList(getResources().getStringArray(R.array.celebrityFive))),
-                getResources().getString(R.string.answerFive)));
-        arrayList.add(new Quiz(getResources().getString(R.string.questionSix),
-                getResources().getDrawable(R.drawable.celebrity_six_image, null),
-                new ArrayList<>(Arrays.asList(getResources().getStringArray(R.array.celebritySix))),
-                getResources().getString(R.string.answerSix)));
-        arrayList.add(new Quiz(getResources().getString(R.string.questionSeven),
-                getResources().getDrawable(R.drawable.celebrity_seven_image, null),
-                new ArrayList<>(Arrays.asList(getResources().getStringArray(R.array.celebritySeven))),
-                getResources().getString(R.string.answerSeven)));
-        arrayList.add(new Quiz(getResources().getString(R.string.questionEight),
-                getResources().getDrawable(R.drawable.celebrity_eight_image, null),
-                new ArrayList<>(Arrays.asList(getResources().getStringArray(R.array.celebrityEight))),
-                getResources().getString(R.string.answerEight)));
-        arrayList.add(new Quiz(getResources().getString(R.string.questionNine),
-                getResources().getDrawable(R.drawable.celebrity_nine_image, null),
-                new ArrayList<>(Arrays.asList(getResources().getStringArray(R.array.celebrityNine))),
-                getResources().getString(R.string.answerNine)));
-        arrayList.add(new Quiz(getResources().getString(R.string.questionTen),
-                getResources().getDrawable(R.drawable.celebrity_ten_image, null),
-                new ArrayList<>(Arrays.asList(getResources().getStringArray(R.array.celebrityTen))),
-                getResources().getString(R.string.answerTen)));
+        LitePal.initialize(this);
+        LitePal.deleteAll(Quiz.class);
+
+        OkHttpClient client = new OkHttpClient();
+        Request request = new Request.Builder().url(jsonUrl).build();
+
+        client.newCall(request).enqueue(new Callback() {
+            @Override
+            public void onFailure(@NotNull Call call, @NotNull IOException e) {
+                e.printStackTrace();
+            }
+
+            @Override
+            public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
+                if (response.isSuccessful()) {
+                    String string = Objects.requireNonNull(response.body()).string();
+                    Gson gson = new Gson();
+                    Type type = new TypeToken<List<Quiz>>(){}.getType();
+                    List<Quiz> list = gson.fromJson(string, type);
+
+                    // Save to database
+                    for (int i = 0; i < list.size(); i++) {
+                        Quiz quiz = list.get(i);
+                        quiz.save();
+                    }
+
+                    // Load data from database
+                    runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            List<Quiz> list = LitePal.findAll(Quiz.class);
+                            QuizAdapter quizAdapter = new QuizAdapter(list, MainActivity.this);
+                            RecyclerView recyclerView = findViewById(R.id.recyclerView);
+                            recyclerView.setAdapter(quizAdapter);
+                        }
+                    });
+                }
+            }
+        });
 
         // Get switchState (level of difficult) from Settings activity using boolean
         // Default state is Easy Mode
@@ -124,7 +137,7 @@ public class MainActivity extends AppCompatActivity {
          else
             limit = 10;
 
-        Iterator<Object> iterator = arrayList.iterator();
+        Iterator<Quiz> iterator = list.iterator();
         int count = 0;
 
         // Iterating through the list of integers

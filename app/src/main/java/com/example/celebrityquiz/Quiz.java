@@ -1,18 +1,19 @@
 package com.example.celebrityquiz;
-import android.graphics.drawable.Drawable;
-import java.util.ArrayList;
+
+import org.litepal.crud.LitePalSupport;
+import java.util.List;
 
 // Bridge class connecting MainActivity with QuizAdapter
-class Quiz {
-    String mQuestion;
-    Drawable mImage;
-    String[] mStringAnswer;
-    String mCorrectAnswer;
+class Quiz extends LitePalSupport {
+    String question;
+    String imageUrl;
+    String[] answerOptions;
+    String correctAnswer;
 
-    Quiz(String mQuestion, Drawable mImage, ArrayList<String> mStringAnswer, String mCorrectAnswer) {
-        this.mQuestion = mQuestion;
-        this.mImage = mImage;
-        this.mStringAnswer = mStringAnswer.toArray(new String[0]);
-        this.mCorrectAnswer = mCorrectAnswer;
+    Quiz(String question, String imageUrl, List<String> answerOptions, String correctAnswer) {
+        this.question = question;
+        this.imageUrl = imageUrl;
+        this.answerOptions = answerOptions.toArray(new String[0]);
+        this.correctAnswer = correctAnswer;
     }
 }
