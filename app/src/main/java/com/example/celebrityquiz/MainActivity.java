@@ -19,7 +19,6 @@ import org.litepal.LitePal;
 import java.io.IOException;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Objects;
@@ -34,7 +33,7 @@ import okhttp3.Response;
 public class MainActivity extends AppCompatActivity {
     // Declare lists
     List<Quiz> list = new ArrayList<>();
-    String jsonUrl = "https://api.jsonbin.io/b/5e84f2315a6c891f427990ec";
+    String jsonUrl = "https://api.jsonbin.io/b/5e8a16b941019a79b61e18eb/4";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,10 +46,10 @@ public class MainActivity extends AppCompatActivity {
 
         RecyclerView recyclerView = findViewById(R.id.recyclerView);
 
-        // Get data from the Internet | see function for more details
+        // Get and load data, adapter and set data to recyclerView |
+        // See function for more details
         loadData();
 
-        // Get adapter and set data to recyclerView
         QuizAdapter quizAdapter = new QuizAdapter(list, this);
         recyclerView.setAdapter(quizAdapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
@@ -98,7 +97,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
                 if (response.isSuccessful()) {
-                    String string = Objects.requireNonNull(response.body()).string();
+                    String string = response.body().string();
                     Gson gson = new Gson();
                     Type type = new TypeToken<List<Quiz>>(){}.getType();
                     List<Quiz> list = gson.fromJson(string, type);
@@ -109,11 +108,12 @@ public class MainActivity extends AppCompatActivity {
                         quiz.save();
                     }
 
-                    // Load data from database
+                    // Load data from database, set adapter and recyclerView layout
                     runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
                             List<Quiz> list = LitePal.findAll(Quiz.class);
+                            //levelMode();
                             QuizAdapter quizAdapter = new QuizAdapter(list, MainActivity.this);
                             RecyclerView recyclerView = findViewById(R.id.recyclerView);
                             recyclerView.setAdapter(quizAdapter);
@@ -122,8 +122,11 @@ public class MainActivity extends AppCompatActivity {
                 }
             }
         });
+    }
 
-        // Get switchState (level of difficult) from Settings activity using boolean
+    // Get switchState (level of difficult) from Settings activity using boolean
+    public void levelMode() {
+
         // Default state is Easy Mode
         SharedPreferences mPrefs = getSharedPreferences("saveLevel", MODE_PRIVATE);
         boolean switchState = mPrefs.getBoolean("value", false);
@@ -134,7 +137,7 @@ public class MainActivity extends AppCompatActivity {
         int limit;
         if (!switchState)
             limit = 6;
-         else
+        else
             limit = 10;
 
         Iterator<Quiz> iterator = list.iterator();

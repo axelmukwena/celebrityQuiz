@@ -7,13 +7,20 @@ import java.util.List;
 class Quiz extends LitePalSupport {
     String question;
     String imageUrl;
-    String[] answerOptions;
+    String [] answerOptions;
     String correctAnswer;
 
-    Quiz(String question, String imageUrl, List<String> answerOptions, String correctAnswer) {
+    Quiz(String question, String imageUrl, String [] answerOptions, String correctAnswer) {
         this.question = question;
         this.imageUrl = imageUrl;
-        this.answerOptions = answerOptions.toArray(new String[0]);
+        this.answerOptions = answerOptions;
         this.correctAnswer = correctAnswer;
     }
 }
+/*
+class SubClass {
+    String one;
+    String two;
+    String three;
+    String four;
+}*/

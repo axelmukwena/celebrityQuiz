@@ -41,7 +41,7 @@ public class QuizAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     public void onBindViewHolder(@NonNull RecyclerView.ViewHolder viewHolder, int position) {
 
         // Get arguments from bridge class, Quiz
-        Quiz quiz = (Quiz) list.get(position);
+        Quiz quiz = list.get(position);
         QuizHolder quizHolder = (QuizHolder) viewHolder;
         quizHolder.viewQuestion.setText(String.format("%s. %s", position + 1, quiz.question));
         Glide.with(quizHolder.imageView.getContext()).load(quiz.imageUrl).into(quizHolder.imageView);
@@ -50,6 +50,7 @@ public class QuizAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
     @Override
     public int getItemCount() {
+        if (list == null) return 0;
         return list.size();
     }
 
@@ -78,11 +79,11 @@ public class QuizAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
             itemView.findViewById(R.id.horizontalDivider);
         }
 
-        // Create radioButtons and add view for each option answer in arrayAnswer, for each radioGroup
-        void createRadioButtons(String[] arrayAnswer) {
+        // Create radioButtons and add view for each option answer in answerOptions, for each radioGroup
+        void createRadioButtons(String[] answerOptions) {
             if (radioGroup.getChildAt(0) != null)
                 radioGroup.removeAllViews();
-            for (String s : arrayAnswer) {
+            for (String s : answerOptions) {
                 radioGroup.addView(createRadioButtonAnswerAndSetOnClickListener(s));
             }
         }
