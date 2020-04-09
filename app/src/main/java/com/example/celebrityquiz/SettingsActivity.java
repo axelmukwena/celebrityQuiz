@@ -11,10 +11,6 @@ import android.view.View;
 import android.widget.ImageButton;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
-import android.widget.Switch;
-import android.widget.CompoundButton;
-
-import java.util.List;
 
 public class SettingsActivity extends AppCompatActivity {
 

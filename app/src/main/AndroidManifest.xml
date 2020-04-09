@@ -14,16 +14,16 @@
         android:fullBackupContent="true"
         android:allowBackup="true">
         <activity
-            android:name=".ScoreActivity"
-            android:parentActivityName=".MainActivity">
+            android:name="com.example.celebrityquiz.ScoreActivity"
+            android:parentActivityName="com.example.celebrityquiz.MainActivity">
         </activity>
 
         <activity
-            android:name=".SettingsActivity"
-            android:parentActivityName=".MainActivity">
+            android:name="com.example.celebrityquiz.SettingsActivity"
+            android:parentActivityName="com.example.celebrityquiz.MainActivity">
         </activity>
 
-        <activity android:name=".MainActivity">
+        <activity android:name="com.example.celebrityquiz.MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
