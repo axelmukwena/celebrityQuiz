@@ -6,7 +6,7 @@ A simple Android quiz app that allows a user to select a posibble answer to each
 
 Build in Android Studio 3.5.3, Minimum SDK Version 22
 
-# Libraries Used
+### Libraries Used
 * [Litepal](https://github.com/LitePalFramework/LitePal): for managing sqlite database configurations
 * [OkHttp](https://github.com/codepath/android_guides/wiki/Using-OkHttp): for sending and receive HTTP-based network requests
 * [Glide](https://github.com/bumptech/glide): media management and image loading
