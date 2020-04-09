@@ -10,39 +10,33 @@
         android:id="@+id/settings_toolbar"
         layout="@layout/settings_toolbar" />
 
-    <!-- Switch toggle display -->
-    <Switch
-        android:id="@+id/switchLevel"
-        android:layout_width="wrap_content"
+    <RadioGroup
+        android:id="@+id/settingsRadioGroup"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginStart="165dp"
-        android:layout_marginTop="37dp"
-        android:layout_marginEnd="165dp"
-        android:switchMinWidth="70dp"
-        android:theme="@style/AppTheme"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.454"
+        android:layout_marginStart="30dp"
+        android:layout_marginTop="100dp"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/settings_toolbar" />
+        app:layout_constraintTop_toTopOf="parent">
 
-    <TextView
-        android:id="@+id/easySetting"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="40dp"
-        android:layout_marginEnd="36dp"
-        android:text="@string/easy"
-        app:layout_constraintEnd_toStartOf="@+id/switchLevel"
-        app:layout_constraintTop_toBottomOf="@+id/settings_toolbar" />
+        <RadioButton
+            android:id="@+id/settingsRadioButton1"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/level1" />
 
-    <TextView
-        android:id="@+id/hardSetting"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="36dp"
-        android:layout_marginTop="40dp"
-        android:text="@string/hard"
-        app:layout_constraintStart_toEndOf="@+id/switchLevel"
-        app:layout_constraintTop_toBottomOf="@+id/settings_toolbar" />
+        <RadioButton
+            android:id="@+id/settingsRadioButton2"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/level2" />
+
+        <RadioButton
+            android:id="@+id/settingsRadioButton3"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/level3" />
+    </RadioGroup>
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -16,42 +16,93 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
 
+import java.util.ArrayList;
 import java.util.List;
 
-public class QuizAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
-    private List<Quiz> list;
-    private Context context;
+public class QuizAdapter extends RecyclerView.Adapter {
+    private List<Quiz> mList;
 
     // Constructor to initialize all arrayList
-    QuizAdapter(List<Quiz> list, Context context) {
-        this.list = list;
-        this.context = context;
-        getItemCount();
+    QuizAdapter(List<Quiz> list) {
+        this.mList = list;
     }
 
     @NonNull
     @Override
     // Build view layout and call ViewHolder, QuizHolder class
     public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int viewType) {
-        LayoutInflater layoutInflater = LayoutInflater.from(context);
-        return new QuizHolder(layoutInflater.inflate(R.layout.choice, viewGroup, false));
+        View layoutInflater = LayoutInflater.from(viewGroup.getContext()).
+                inflate(R.layout.choice, viewGroup, false);
+        return new RecyclerView.ViewHolder(layoutInflater) {};
     }
 
     @Override
-    public void onBindViewHolder(@NonNull RecyclerView.ViewHolder viewHolder, int position) {
+    public void onBindViewHolder(@NonNull RecyclerView.ViewHolder viewHolder, final int position) {
 
-        // Get arguments from bridge class, Quiz
-        Quiz quiz = list.get(position);
-        QuizHolder quizHolder = (QuizHolder) viewHolder;
-        quizHolder.viewQuestion.setText(String.format("%s. %s", position + 1, quiz.question));
-        Glide.with(quizHolder.imageView.getContext()).load(quiz.imageUrl).into(quizHolder.imageView);
-        quizHolder.createRadioButtons(quiz.answerOptions);
+        TextView viewQuestion = viewHolder.itemView.findViewById(R.id.celebrityQuestion);
+        ImageView imageView = viewHolder.itemView.findViewById(R.id.celebrityImage);
+        RadioGroup radioGroup = viewHolder.itemView.findViewById(R.id.celebrityOption);
+        RadioButton radioButtonOne = viewHolder.itemView.findViewById(R.id.radioButtonOne);
+        RadioButton radioButtonTwo = viewHolder.itemView.findViewById(R.id.radioButtonTwo);
+        RadioButton radioButtonThree = viewHolder.itemView.findViewById(R.id.radioButtonThree);
+        RadioButton radioButtonFour = viewHolder.itemView.findViewById(R.id.radioButtonFour);
+        View horizontalLine = viewHolder.itemView.findViewById(R.id.horizontalDivider);
+
+        if(!mList.isEmpty()) {
+            Quiz quiz = mList.get(position);
+
+            viewQuestion.setText(String.format("%s. %s", position + 1, quiz.question));
+            Glide.with(imageView.getContext()).load(quiz.imageUrl).into(imageView);
+            radioButtonOne.setText(quiz.one);
+            radioButtonTwo.setText(quiz.two);
+            radioButtonThree.setText(quiz.three);
+            radioButtonFour.setText(quiz.four);
+
+            switch (quiz.userAnswer) {
+                case 1:
+                    radioButtonOne.setChecked(true);
+                    break;
+                case 2:
+                    radioButtonTwo.setChecked(true);
+                    break;
+                case 3:
+                    radioButtonThree.setChecked(true);
+                    break;
+                case 4:
+                    radioButtonFour.setChecked(true);
+                    break;
+                default:
+                    radioGroup.clearCheck();
+            }
+        }
+
+        radioGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(RadioGroup group, int checkedId) {
+                switch (checkedId) {
+                    case R.id.radioButtonOne:
+                        mList.get(position).userAnswer = 1;
+                        break;
+                    case R.id.radioButtonTwo:
+                        mList.get(position).userAnswer = 2;
+                        break;
+                    case R.id.radioButtonThree:
+                        mList.get(position).userAnswer = 3;
+                        break;
+                    case R.id.radioButtonFour:
+                        mList.get(position).userAnswer = 4;
+                        break;
+                    default:
+                        mList.get(position).userAnswer = 0;
+                }
+            }
+        });
     }
 
     @Override
     public int getItemCount() {
-        if (list == null) return 0;
-        return list.size();
+        if (mList == null) return 0;
+        return mList.size();
     }
 
     @Override
@@ -59,73 +110,12 @@ public class QuizAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
         return position;
     }
 
-    // Class to place items into view layout set by recyclerView
-    public class QuizHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
-        private TextView viewQuestion;
-        private RadioGroup radioGroup;
-        private ImageView imageView;
-        int correct = 0; // Initialize score value | if selected radioButton is correct
-
-        // Interface instance to access and modify score value. See onClick function
-        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(context);
-        SharedPreferences.Editor editor = sharedPreferences.edit();
-        int scoreValue = sharedPreferences.getInt("score", 0);
-
-        QuizHolder(@NonNull View itemView) {
-            super(itemView);
-            viewQuestion = itemView.findViewById(R.id.celebrityQuestion);
-            imageView = itemView.findViewById(R.id.celebrityImage);
-            radioGroup = itemView.findViewById(R.id.celebrityOption);
-            itemView.findViewById(R.id.horizontalDivider);
+    int getScore() {
+        int score = 0;
+        for (int i = 0; i < mList.size(); i++) {
+            if (mList.get(i).userAnswer == mList.get(i).correctAnswer) score++;
         }
-
-        // Create radioButtons and add view for each option answer in answerOptions, for each radioGroup
-        void createRadioButtons(String[] answerOptions) {
-            if (radioGroup.getChildAt(0) != null)
-                radioGroup.removeAllViews();
-            for (String s : answerOptions) {
-                radioGroup.addView(createRadioButtonAnswerAndSetOnClickListener(s));
-            }
-        }
-
-        // Set onClickListener for each radioButton
-        RadioButton createRadioButtonAnswerAndSetOnClickListener(String string) {
-            RadioButton radioButton = new RadioButton(context);
-            radioButton.setText(string);
-            radioButton.setOnClickListener(this);
-            return radioButton;
-        }
-
-        @Override
-        public void onClick(View view) {
-            // If radioButton is checked, set view checked
-            boolean checked = ((RadioButton) view).isChecked();
-
-            // Since there are more than 1 question set, get position of current set
-            int position = getAdapterPosition();
-
-            // For loop for each position where radioButton is checked, get string
-            // of radioButton checked, compare it to mCorrectAnswer, if correct,
-            // increment correct/score value
-            for (int i = 0; i <= position; i++) {
-                if (checked) {
-                    int radioButtonID = radioGroup.getCheckedRadioButtonId();
-                    View radioButton = radioGroup.findViewById(radioButtonID);
-                    int selectedAnswerIndex = radioGroup.indexOfChild(radioButton);
-                    RadioButton r = (RadioButton) radioGroup.getChildAt(selectedAnswerIndex);
-                    String selectedAnswer = r.getText().toString();
-
-                    Quiz quiz = list.get(position);
-                    String correctAnswer = quiz.correctAnswer;
-
-                    if (selectedAnswer.equals(correctAnswer)) {
-                        correct++;
-                        editor.putInt("score", correct); // Update score interface
-                        editor.apply();
-                    }
-                }
-            }
-            correct = 0; // Always set the score value to zero to reset score interface
-        }
+        return score;
     }
 }
+

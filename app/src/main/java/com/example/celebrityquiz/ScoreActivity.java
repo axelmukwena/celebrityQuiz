@@ -26,9 +26,8 @@ public class ScoreActivity extends AppCompatActivity{
             getSupportActionBar().setTitle("");
         }
 
-        // Interface instance to access score value from QuizAdapter
-        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
-        int scoreValue = sharedPreferences.getInt("score", 0);
+        // Interface instance to access score value from MainActivity
+        int scoreValue = getIntent().getIntExtra("score", 0);
 
         // Set view and display scoreValue
         TextView scoreView = findViewById(R.id.scoreTextView);
@@ -36,9 +35,6 @@ public class ScoreActivity extends AppCompatActivity{
 
         // See function
         displayWellDone(scoreValue);
-
-        // Remove score value from interface/*memory before leaving activity
-        sharedPreferences.edit().remove("score").apply();
 
         // Create back button and start mainActivity once clicked
         ImageButton backArrow = findViewById(R.id.backArrowScore);
@@ -53,29 +49,18 @@ public class ScoreActivity extends AppCompatActivity{
 
     // Function to display well done image if user gets all correct | also settings for total value
     public void displayWellDone(int score) {
-        // Get switchState from Settings activity
-        SharedPreferences mPrefs = getSharedPreferences("saveLevel", MODE_PRIVATE);
-        boolean switchState = mPrefs.getBoolean("value", false);
+        // Get level of difficulty from Settings activity
+        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
+        sharedPreferences.getInt("saveLevel", 1);
 
         // Set view for well done image
         ImageView imageView = findViewById(R.id.wellDoneImage);
         imageView.setVisibility(View.INVISIBLE); // set image invisible
 
-        // Based on switch state / level of difficulty, set total value and
+        TextView scoreView = findViewById(R.id.scoreTotalTextView);
+        scoreView.setText(String.valueOf(5));
+
         // display well done image if user gets all correct
-        if (!switchState) {
-            TextView scoreView = findViewById(R.id.scoreTotalTextView);
-            scoreView.setText(String.valueOf(6));
-            if (score == 6) {
-                imageView.setVisibility(View.VISIBLE);
-            }
-        }
-        else {
-            TextView scoreView = findViewById(R.id.scoreTotalTextView);
-            scoreView.setText(String.valueOf(10));
-            if (score == 10) {
-                imageView.setVisibility(View.VISIBLE);
-            }
-        }
+        if (score == 5) imageView.setVisibility(View.VISIBLE);
     }
 }

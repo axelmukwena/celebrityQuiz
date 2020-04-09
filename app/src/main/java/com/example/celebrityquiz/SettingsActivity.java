@@ -2,14 +2,19 @@ package com.example.celebrityquiz;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.preference.PreferenceManager;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.ImageButton;
+import android.widget.RadioButton;
+import android.widget.RadioGroup;
 import android.widget.Switch;
 import android.widget.CompoundButton;
+
+import java.util.List;
 
 public class SettingsActivity extends AppCompatActivity {
 
@@ -35,29 +40,40 @@ public class SettingsActivity extends AppCompatActivity {
             }
         });
 
-        final Switch switchValue = findViewById(R.id.switchLevel);
+        // Interface instance to access and modify level of difficulty | default mode; firstLevel
+        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
+        final SharedPreferences.Editor editor = sharedPreferences.edit();
+        int level = sharedPreferences.getInt("saveLevel", 1);
 
-        // Interface instance to access and modify switchState / level of difficulty | default mode; false
-        SharedPreferences sharedPreferences = getSharedPreferences("saveLevel", MODE_PRIVATE);
-        switchValue.setChecked(sharedPreferences.getBoolean("value", false));
+        RadioButton radioButtonOne = findViewById(R.id.settingsRadioButton1);
+        RadioButton radioButtonTwo = findViewById(R.id.settingsRadioButton2);
+        RadioButton radioButtonThree = findViewById(R.id.settingsRadioButton3);
 
-        // Use switch to change level of difficulty, once clicked
-        switchValue.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+        if (level == 1) {
+            radioButtonOne.setChecked(true);
+            radioButtonTwo.setChecked(false);
+            radioButtonThree.setChecked(false);
+        } else if (level == 2) {
+            radioButtonOne.setChecked(false);
+            radioButtonTwo.setChecked(true);
+            radioButtonThree.setChecked(false);
+        } else {
+            radioButtonOne.setChecked(false);
+            radioButtonTwo.setChecked(false);
+            radioButtonThree.setChecked(true);
+        }
+
+        RadioGroup radioGroup = findViewById(R.id.settingsRadioGroup);
+        radioGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
             @Override
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                if (isChecked) {
-                    SharedPreferences.Editor editor = getSharedPreferences(
-                            "saveLevel", MODE_PRIVATE).edit();
-                    editor.putBoolean("value", true);
-                    editor.apply();
-                    switchValue.setChecked(true); // Set saved value (hard) forever
-                } else {
-                    SharedPreferences.Editor editor = getSharedPreferences(
-                            "saveLevel", MODE_PRIVATE).edit();
-                    editor.putBoolean("value", false);
-                    editor.apply();
-                    switchValue.setChecked(false); // Set saved value (easy) forever
-                }
+            public void onCheckedChanged(RadioGroup group, int checkedId) {
+                // Change levels based on radioButton Selected
+                int level = 1;
+                if (checkedId == R.id.settingsRadioButton2) level = 2;
+                else if (checkedId == R.id.settingsRadioButton3) level = 3;
+
+                editor.putInt("saveLevel", level); // Update level interface
+                editor.apply();
             }
         });
     }

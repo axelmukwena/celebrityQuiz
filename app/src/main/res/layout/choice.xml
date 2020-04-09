@@ -28,7 +28,7 @@
         android:elevation="3dp"
         tools:ignore="UnusedAttribute" />
 
-    <!-- Radio group view | see strings.xml -->
+    <!-- Radio group view -->
     <RadioGroup
         android:id="@+id/celebrityOption"
         android:layout_width="match_parent"
@@ -36,7 +36,28 @@
         android:orientation="vertical"
         android:layout_marginTop="15dp"
         android:layout_marginBottom="15dp"
-        android:layout_marginStart="30dp"/>
+        android:layout_marginStart="30dp">
+
+        <RadioButton
+            android:id="@+id/radioButtonOne"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"/>
+
+        <RadioButton
+            android:id="@+id/radioButtonTwo"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+
+        <RadioButton
+            android:id="@+id/radioButtonThree"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+
+        <RadioButton
+            android:id="@+id/radioButtonFour"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+    </RadioGroup>
 
     <View style="@style/HorizontalDivider"
         android:id="@+id/horizontalDivider"/>
