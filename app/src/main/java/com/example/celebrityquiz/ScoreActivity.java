@@ -26,8 +26,9 @@ public class ScoreActivity extends AppCompatActivity{
             getSupportActionBar().setTitle("");
         }
 
-        // Interface instance to access score value from MainActivity
+        // Interface instance to access score value from QuizActivity
         int scoreValue = getIntent().getIntExtra("score", 0);
+        int level = getIntent().getIntExtra("level", 1);
 
         // Set view and display scoreValue
         TextView scoreView = findViewById(R.id.scoreTextView);
@@ -36,6 +37,7 @@ public class ScoreActivity extends AppCompatActivity{
         // See function
         displayWellDone(scoreValue);
 
+        scoreValue = 0;
         // Create back button and start mainActivity once clicked
         ImageButton backArrow = findViewById(R.id.backArrowScore);
         backArrow.setOnClickListener(new View.OnClickListener() {
@@ -49,9 +51,6 @@ public class ScoreActivity extends AppCompatActivity{
 
     // Function to display well done image if user gets all correct | also settings for total value
     public void displayWellDone(int score) {
-        // Get level of difficulty from Settings activity
-        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
-        sharedPreferences.getInt("saveLevel", 1);
 
         // Set view for well done image
         ImageView imageView = findViewById(R.id.wellDoneImage);

@@ -32,7 +32,6 @@ public class QuizActivity extends AppCompatActivity {
     private List<Quiz> quizList;
     private int level;
     private int seconds;
-    private CountDownTimer countDownTimer;
     private int indexCurrentQuestion;
 
     private ProgressBar progressBarQuiz;
@@ -63,26 +62,32 @@ public class QuizActivity extends AppCompatActivity {
         radioButtonOne.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                switch (quizList.get(indexCurrentQuestion).userAnswer) {
-                    case R.id.radioButtonOne:
-                        ((RadioButton) view).setChecked(true);
-                        quizList.get(indexCurrentQuestion).userAnswer = 1;
-                        break;
-                    case R.id.radioButtonTwo:
-                        ((RadioButton) view).setChecked(true);
-                        quizList.get(indexCurrentQuestion).userAnswer = 2;
-                        break;
-                    case R.id.radioButtonThree:
-                        ((RadioButton) view).setChecked(true);
-                        quizList.get(indexCurrentQuestion).userAnswer = 3;
-                        break;
-                    case R.id.radioButtonFour:
-                        ((RadioButton) view).setChecked(true);
-                        quizList.get(indexCurrentQuestion).userAnswer = 4;
-                        break;
-                    default:
-                        quizList.get(indexCurrentQuestion).userAnswer = 0;
-                }
+                ((RadioButton) view).setChecked(true);
+                quizList.get(indexCurrentQuestion).userAnswer = 1;
+            }
+        });
+
+        radioButtonTwo.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                ((RadioButton) view).setChecked(true);
+                quizList.get(indexCurrentQuestion).userAnswer = 2;
+            }
+        });
+
+        radioButtonThree.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                ((RadioButton) view).setChecked(true);
+                quizList.get(indexCurrentQuestion).userAnswer = 3;
+            }
+        });
+
+        radioButtonFour.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                ((RadioButton) view).setChecked(true);
+                quizList.get(indexCurrentQuestion).userAnswer = 4;
             }
         });
 
@@ -95,7 +100,7 @@ public class QuizActivity extends AppCompatActivity {
         String string = null;
 
         try {
-            FileInputStream fileInputStream = openFileInput("myJason");
+            FileInputStream fileInputStream = openFileInput("myJson");
             InputStreamReader inputStreamReader = new InputStreamReader(fileInputStream, StandardCharsets.UTF_8);
             BufferedReader bufferedReader = new BufferedReader(inputStreamReader);
             StringBuilder stringBuilder = new StringBuilder();
@@ -130,23 +135,26 @@ public class QuizActivity extends AppCompatActivity {
         buttonPrevious.setEnabled(false);
 
         progressBarQuiz.setProgress(seconds);
-        countDownTimer = new CountDownTimer(seconds * 1000, 100000) {
+
+        final CountDownTimer countDownTimer = new CountDownTimer(seconds * 1000, 1000) {
             @Override
             public void onTick(long millisUntilFinished) {
-                long progress = (millisUntilFinished / 1000);
-                progressBarQuiz.setProgress((int) progress);
+                progressBarQuiz.setProgress((int) (millisUntilFinished / 1000));
             }
 
             @Override
             public void onFinish() {
+                progressBarQuiz.setProgress(0);
                 int score = getScore();
+                Toast.makeText(QuizActivity.this, "Score: " + score, Toast.LENGTH_SHORT).show();
                 Intent i = new Intent(QuizActivity.this, ScoreActivity.class);
                 i.putExtra("score", score);
-                i.setFlags(Intent. FLAG_ACTIVITY_CLEAR_TOP | Intent. FLAG_ACTIVITY_SINGLE_TOP );
+                i.putExtra("level", level);
+                i.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
                 startActivity(i);
             }
-        };
-        countDownTimer.start();
+        }.start();
+        countDownTimer.cancel();
     }
 
     public void onButtonPrevious(View view) {
@@ -157,7 +165,7 @@ public class QuizActivity extends AppCompatActivity {
             Quiz currentQuestion = quizList.get(indexCurrentQuestion);
             currentQuestionView(currentQuestion);
 
-            RadioGroup radioGroup = findViewById(R.id.celebrityOption);
+            radioGroup = findViewById(R.id.celebrityOption);
             if(currentQuestion.userAnswer == 0) radioGroup.clearCheck();
             else {
                 switch (currentQuestion.userAnswer) {
@@ -190,7 +198,7 @@ public class QuizActivity extends AppCompatActivity {
             Quiz currentQuestion = quizList.get(indexCurrentQuestion);
             currentQuestionView(currentQuestion);
 
-            RadioGroup radioGroup = findViewById(R.id.celebrityOption);
+            radioGroup = findViewById(R.id.celebrityOption);
             if(currentQuestion.userAnswer == 0) radioGroup.clearCheck();
             else {
                 switch (currentQuestion.userAnswer) {

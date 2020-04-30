@@ -1,9 +1,7 @@
 package com.example.celebrityquiz;
 
-import org.litepal.crud.LitePalSupport;
-
 // Bridge class connecting MainActivity with QuizAdapter
-public class Quiz extends LitePalSupport {
+public class Quiz{
     String question;
     String imageUrl;
     String one;

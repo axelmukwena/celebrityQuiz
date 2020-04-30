@@ -1,42 +1,29 @@
 package com.example.celebrityquiz;
 
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.view.Menu;
-import android.view.MenuItem;
+import android.view.View;
+import android.widget.Button;
+import android.widget.ProgressBar;
+import android.widget.RadioButton;
+import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
-import androidx.preference.PreferenceManager;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-
-import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
-
-import org.jetbrains.annotations.NotNull;
-import org.litepal.LitePal;
-
-import java.io.IOException;
-import java.lang.reflect.Type;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
-
-import okhttp3.Call;
-import okhttp3.Callback;
-import okhttp3.OkHttpClient;
-import okhttp3.Request;
-import okhttp3.Response;
 
 public class MainActivity extends AppCompatActivity {
+
+    private RadioButton radioButtonLevelOne;
+    private RadioButton radioButtonLevelTwo;
+    private RadioButton radioButtonLevelThree;
+    private RadioButton radioButton30;
+    private RadioButton radioButton60;
+    private RadioButton radioButton90;
+    private ProgressBar progressBarDownload;
+    private Button buttonUpdate;
+    private Button buttonStartQuiz;
     public int level;
-    List<Quiz> firstList = new ArrayList<>();
-    List<Quiz> secondList = new ArrayList<>();
-    List<Quiz> thirdList = new ArrayList<>();
-    QuizAdapter quizAdapter;
-    String jsonUrl = "https://api.jsonbin.io/b/5e8f60bb172eb6438960f731";
+    public int seconds;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,105 +34,85 @@ public class MainActivity extends AppCompatActivity {
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        RecyclerView recyclerView = findViewById(R.id.recyclerView);
+        radioButtonLevelOne = findViewById(R.id.radioButtonLevelOne);
+        radioButtonLevelTwo = findViewById(R.id.radioButtonLevelTwo);
+        radioButtonLevelThree = findViewById(R.id.radioButtonLevelThree);
+        radioButtonLevelOne.setChecked(true);
+        radioButtonLevelTwo.setChecked(false);
+        radioButtonLevelThree.setChecked(false);
 
-        // Get and load data, adapter and set data to recyclerView
-        // See function for more details
-        loadData();
+        radioButton30 = findViewById(R.id.radioButton30);
+        radioButton60 = findViewById(R.id.radioButton60);
+        radioButton90 = findViewById(R.id.radioButton90);
+        radioButton30.setChecked(true);
+        radioButton60.setChecked(false);
+        radioButton90.setChecked(false);
 
-        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
-        level = sharedPreferences.getInt("saveLevel", 1);
+        progressBarDownload = findViewById(R.id.progressBarDownload);
+        progressBarDownload.setMax(100);
 
-        if (level == 1) {
-            quizAdapter = new QuizAdapter(firstList);
-        } else if (level == 2) {
-            quizAdapter = new QuizAdapter(secondList);
-        } else quizAdapter = new QuizAdapter(thirdList);
-
-        recyclerView.setLayoutManager(new LinearLayoutManager(this));
-        recyclerView.setAdapter(quizAdapter);
+        buttonUpdate = findViewById(R.id.buttonUpdate);
+        buttonStartQuiz = findViewById(R.id.buttonStartQuiz);
+        buttonUpdate.setEnabled(true);
+        buttonStartQuiz.setEnabled(false);
+        downloadTask = null;
     }
 
-    // Create menu options
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.main_menu, menu);
-        return true;
-    }
+    private DownloadTask downloadTask;
 
-    // Switch case for menu options based on user selection
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-            case R.id.scoreButton:
-                int score = quizAdapter.getScore();
-                Intent i = new Intent(this, ScoreActivity.class);
-                i.putExtra("score", score);
-                this.startActivity(i);
-                break;
-            case R.id.settings:
-                Intent j = new Intent(this, SettingsActivity.class);
-                this.startActivity(j);
-                break;
+    private DownloadListener downloadListener = new DownloadListener() {
+        @Override
+        public void onProgress(int progress) {
+            progressBarDownload.setProgress(progress);
         }
-        return (super.onOptionsItemSelected(item));
+
+        @Override
+        public void onSuccess() {
+            downloadTask = null;
+            progressBarDownload.setProgress(progressBarDownload.getMax());
+            buttonStartQuiz.setEnabled(true);
+        }
+
+        @Override
+        public void onFailed() {
+            downloadTask = null;
+            //when download failed, close the foreground notification and create a new one about the failure
+            Toast.makeText(getApplicationContext(), "Download Failed", Toast.LENGTH_SHORT).show();
+        }
+
+        @Override
+        public void onPaused() {
+            downloadTask = null;
+            Toast.makeText(getApplicationContext(), "Paused", Toast.LENGTH_SHORT).show();
+        }
+
+        @Override
+        public void onCanceled() {
+            downloadTask = null;
+            Toast.makeText(getApplicationContext(), "Canceled", Toast.LENGTH_SHORT).show();
+        }
+    };
+
+    public void onButtonUpdate(View view) {
+        if(downloadTask == null) {
+            String jsonUrl = "https://api.jsonbin.io/b/5e8f60bb172eb6438960f731";
+            downloadTask = new DownloadTask(downloadListener, this);
+            downloadTask.execute(jsonUrl);
+        }
     }
 
-    // Load data to from internet and save it to database
-    public void loadData() {
+    public void onButtonStartQuiz(View view) {
+        if(radioButtonLevelOne.isChecked()) level = 1;
+        if(radioButtonLevelTwo.isChecked()) level = 2;
+        if(radioButtonLevelThree.isChecked()) level = 3;
 
-        LitePal.initialize(this);
-        LitePal.deleteAll(Quiz.class);
+        if(radioButton30.isChecked()) seconds = 30;
+        if(radioButton60.isChecked()) seconds = 60;
+        if(radioButton90.isChecked()) seconds = 90;
 
-        OkHttpClient client = new OkHttpClient();
-        Request request = new Request.Builder().url(jsonUrl).build();
-
-        client.newCall(request).enqueue(new Callback() {
-            @Override
-            public void onFailure(@NotNull Call call, @NotNull IOException e) {
-                e.printStackTrace();
-            }
-
-            @Override
-            public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
-                if (response.isSuccessful()) {
-                    String string = Objects.requireNonNull(response.body()).string();
-                    Gson gson = new Gson();
-                    Type type = new TypeToken<List<Quiz>>() {}.getType();
-                    List<Quiz> list = gson.fromJson(string, type);
-
-                    // Save to database
-                    for (int i = 0; i < list.size(); i++) {
-                        Quiz quiz = list.get(i);
-                        quiz.save();
-                    }
-
-                    // Load data from database, set adapter and recyclerView layout
-                    runOnUiThread(new Runnable() {
-                        @Override
-                        public void run() {
-                            List<Quiz> list = LitePal.findAll(Quiz.class);
-                            firstList = list.subList(0, 5);
-                            secondList = list.subList(5, 10);
-                            thirdList = list.subList(10, 15);
-
-                            SharedPreferences sharedPreferences = PreferenceManager.
-                                    getDefaultSharedPreferences(MainActivity.this);
-                            level = sharedPreferences.getInt("saveLevel", 1);
-
-                            if (level == 1) {
-                                quizAdapter = new QuizAdapter(firstList);
-                            } else if (level == 2) {
-                                quizAdapter = new QuizAdapter(secondList);
-                            } else quizAdapter = new QuizAdapter(thirdList);
-
-                            RecyclerView recyclerView = findViewById(R.id.recyclerView);
-                            recyclerView.setAdapter(quizAdapter);
-                        }
-                    });
-                }
-            }
-        });
+        Intent intent = new Intent(this, QuizActivity.class);
+        intent.putExtra("level", level);
+        intent.putExtra("seconds", seconds);
+        startActivity(intent);
     }
 }
