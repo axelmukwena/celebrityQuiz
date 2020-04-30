@@ -13,6 +13,12 @@
         android:theme="@style/AppTheme"
         android:fullBackupContent="true"
         android:allowBackup="true">
+
+        <activity
+            android:name="com.example.celebrityquiz.QuizActivity"
+            android:parentActivityName="com.example.celebrityquiz.MainActivity">
+        </activity>
+
         <activity
             android:name="com.example.celebrityquiz.ScoreActivity"
             android:parentActivityName="com.example.celebrityquiz.MainActivity">
