@@ -39,6 +39,7 @@ public class SolutionAdapter extends RecyclerView.Adapter {
     @Override
     public void onBindViewHolder(@NonNull RecyclerView.ViewHolder viewHolder, final int position) {
 
+        // Define recycler views
         TextView viewQuestion = viewHolder.itemView.findViewById(R.id.celebrityQuestion);
         ImageView imageView = viewHolder.itemView.findViewById(R.id.celebrityImage);
         RadioGroup radioGroup = viewHolder.itemView.findViewById(R.id.celebrityOption);
@@ -46,8 +47,9 @@ public class SolutionAdapter extends RecyclerView.Adapter {
         RadioButton radioButtonTwo = viewHolder.itemView.findViewById(R.id.radioButtonTwo);
         RadioButton radioButtonThree = viewHolder.itemView.findViewById(R.id.radioButtonThree);
         RadioButton radioButtonFour = viewHolder.itemView.findViewById(R.id.radioButtonFour);
-        View horizontalLine = viewHolder.itemView.findViewById(R.id.horizontalDivider);
+        viewHolder.itemView.findViewById(R.id.horizontalDivider);
 
+        // Format recycler view content
         if(!quizList.isEmpty()) {
             Quiz quiz = quizList.get(position);
 
@@ -58,6 +60,12 @@ public class SolutionAdapter extends RecyclerView.Adapter {
             radioButtonThree.setText(quiz.three);
             radioButtonFour.setText(quiz.four);
 
+            // This is crucial for Marking system
+            /* First, determine if userAnswer is the same as correctAnswer, IF YES, mark it
+            * green and set it checked. ELSE, if user didn't select anything clearCheck() else if
+            * userAnswer is wrong, mark userAnswer red, locate
+            * correctAnswer and mark it green.
+            */
             if(quiz.userAnswer == quiz.correctAnswer) {
                 if(1 == quiz.correctAnswer) {
                     radioButtonOne.setChecked(true);
@@ -109,9 +117,9 @@ public class SolutionAdapter extends RecyclerView.Adapter {
                     radioButtonFour.setTextColor(Color.parseColor("#FF0BA512"));
                 }
             }
-
             if(0 == quiz.userAnswer) radioGroup.clearCheck();
 
+            // Disable all radioButton to avoid answer misinterpretations
             radioButtonOne.setEnabled(false);
             radioButtonTwo.setEnabled(false);
             radioButtonThree.setEnabled(false);
@@ -119,6 +127,7 @@ public class SolutionAdapter extends RecyclerView.Adapter {
         }
     }
 
+    // Default ViewHolder methods
     @Override
     public int getItemCount() {
         if (quizList == null) return 0;

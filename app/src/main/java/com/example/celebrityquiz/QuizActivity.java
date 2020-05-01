@@ -50,8 +50,10 @@ public class QuizActivity extends AppCompatActivity {
         super.onCreate((savedInstanceState));
         setContentView(R.layout.activity_quiz);
 
+        // Hide toolbar
         Objects.requireNonNull(getSupportActionBar()).hide();
 
+        // Define Activity views
         questionView = findViewById(R.id.celebrityQuestion);
         imageView = findViewById(R.id.celebrityImage);
         radioGroup = findViewById(R.id.celebrityOption);
@@ -61,6 +63,7 @@ public class QuizActivity extends AppCompatActivity {
         radioButtonFour = findViewById(R.id.radioButtonFour);
         textTime = findViewById(R.id.textTime);
 
+        // setOnClickListener and set checked onClick for each button
         radioButtonOne.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -93,14 +96,17 @@ public class QuizActivity extends AppCompatActivity {
             }
         });
 
+        // Define button views
         buttonNext = findViewById(R.id.buttonNext);
         buttonPrevious = findViewById(R.id.buttonPrevious);
 
+        // Access intent interface and get variables
         Intent intent = getIntent();
         int level = intent.getIntExtra("level", 0);
         seconds = intent.getIntExtra("seconds", 30);
         String string = null;
 
+        // Safely read data from saved file
         try {
             FileInputStream fileInputStream = openFileInput("myJson");
             InputStreamReader inputStreamReader = new InputStreamReader(fileInputStream, StandardCharsets.UTF_8);
@@ -117,8 +123,9 @@ public class QuizActivity extends AppCompatActivity {
 
         Gson gson = new Gson();
         Type type = new TypeToken<List<Quiz>>(){}.getType();
-
         List<Quiz> list = gson.fromJson(string, type);
+
+        // Set sublist based on user set level
         if (level == 1) {
             assert list != null;
             quizList = list.subList(0, 5);
@@ -130,13 +137,16 @@ public class QuizActivity extends AppCompatActivity {
             quizList = list.subList(10, 15);
         }
 
+        // initialise and set for each index in current activity as current question
         indexCurrentQuestion = 0;
         Quiz currentQuestion = quizList.get(indexCurrentQuestion);
         currentQuestionView(currentQuestion);
-        buttonPrevious.setEnabled(false);
+        buttonPrevious.setEnabled(false); // Disable previous button when current index is 0
 
+        // See function
         startTimer();
 
+        // When user submit quiz, stop time and start Solution Activity
         Button buttonSubmit = findViewById(R.id.buttonSubmit);
         buttonSubmit.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -153,6 +163,7 @@ public class QuizActivity extends AppCompatActivity {
         });
     }
 
+    // Start countdown. OnFinish, start Solution Activity
     public void startTimer() {
         textTime.setText(String.valueOf(seconds));
         countDownTimer = new CountDownTimer(seconds * 1000, 1000) {
@@ -163,9 +174,9 @@ public class QuizActivity extends AppCompatActivity {
 
             @Override
             public void onFinish() {
-                int score = getScore();
                 Intent i = new Intent(QuizActivity.this, SolutionActivity.class);
-                i.putExtra("score", score);
+                i.putExtra("score", getScore());
+                // Change List to ArrayList to accommodate subList
                 ArrayList<Quiz> list = new ArrayList<>(quizList);
                 i.putExtra("quizList", list);
                 i.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
@@ -174,10 +185,14 @@ public class QuizActivity extends AppCompatActivity {
         }.start();
     }
 
+    // Cancel timer to prevent countDown in background
+    // If not defined, Solution Activity will start even when user goes back to
+    // Main Activity because Quiz Activity doesn't get destroyed instantly
     public void stopTimer() {
         countDownTimer.cancel();
     }
 
+    // Pre-define new views before setting previous question as current question, for index < 0
     public void onButtonPrevious(View view) {
         if(indexCurrentQuestion != 0) {
             indexCurrentQuestion--;
@@ -211,6 +226,7 @@ public class QuizActivity extends AppCompatActivity {
         }
     }
 
+    // Pre-define new views before setting next question as current question, for index > list.size()
     public void onButtonNext(View view) {
         if(indexCurrentQuestion != (quizList.size() - 1)) {
             indexCurrentQuestion++;
@@ -253,6 +269,7 @@ public class QuizActivity extends AppCompatActivity {
         Glide.with(imageView.getContext()).load(currentQuestion.imageUrl).into(imageView);
     }
 
+    // Calculate score
     public int getScore() {
         int score = 0;
         for (int i = 0; i < quizList.size(); i++) {

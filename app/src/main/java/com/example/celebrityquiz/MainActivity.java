@@ -29,6 +29,7 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        // Define Level views
         radioButtonLevelOne = findViewById(R.id.radioButtonLevelOne);
         radioButtonLevelTwo = findViewById(R.id.radioButtonLevelTwo);
         radioButtonLevelThree = findViewById(R.id.radioButtonLevelThree);
@@ -36,6 +37,7 @@ public class MainActivity extends AppCompatActivity {
         radioButtonLevelTwo.setChecked(false);
         radioButtonLevelThree.setChecked(false);
 
+        // Define Time views
         radioButton30 = findViewById(R.id.radioButton30);
         radioButton60 = findViewById(R.id.radioButton60);
         radioButton90 = findViewById(R.id.radioButton90);
@@ -43,18 +45,21 @@ public class MainActivity extends AppCompatActivity {
         radioButton60.setChecked(false);
         radioButton90.setChecked(false);
 
+        // Define Download views
         progressBarDownload = findViewById(R.id.progressBarDownload);
         progressBarDownload.setMax(100);
 
+        // Define Update and Starting buttons
         Button buttonUpdate = findViewById(R.id.buttonUpdate);
         buttonStartQuiz = findViewById(R.id.buttonStartQuiz);
         buttonUpdate.setEnabled(true);
         buttonStartQuiz.setEnabled(false);
-        downloadTask = null;
+        downloadTask = null; // Always initialize task to null
     }
 
     private DownloadTask downloadTask;
 
+    // Define Download methods
     private DownloadListener downloadListener = new DownloadListener() {
         @Override
         public void onProgress(int progress) {
@@ -65,7 +70,7 @@ public class MainActivity extends AppCompatActivity {
         public void onSuccess() {
             downloadTask = null;
             progressBarDownload.setProgress(progressBarDownload.getMax());
-            buttonStartQuiz.setEnabled(true);
+            buttonStartQuiz.setEnabled(true); // Enable Start button when download is successful
         }
 
         @Override
@@ -90,12 +95,14 @@ public class MainActivity extends AppCompatActivity {
 
     public void onButtonUpdate(View view) {
         if(downloadTask == null) {
+            // Import data from internet
             String jsonUrl = "https://api.jsonbin.io/b/5e8f60bb172eb6438960f731";
             downloadTask = new DownloadTask(downloadListener, this);
             downloadTask.execute(jsonUrl);
         }
     }
 
+    // Start QuizActivity with user settings/choices
     public void onButtonStartQuiz(View view) {
         if(radioButtonLevelOne.isChecked()) level = 1;
         if(radioButtonLevelTwo.isChecked()) level = 2;
@@ -104,7 +111,7 @@ public class MainActivity extends AppCompatActivity {
         if(radioButton30.isChecked()) seconds = 30;
         if(radioButton60.isChecked()) seconds = 60;
         if(radioButton90.isChecked()) seconds = 90;
-
+        
         Intent intent = new Intent(this, QuizActivity.class);
         intent.putExtra("level", level);
         intent.putExtra("seconds", seconds);

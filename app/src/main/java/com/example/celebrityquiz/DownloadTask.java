@@ -16,10 +16,12 @@ import okhttp3.Response;
 
 public class DownloadTask extends AsyncTask<String, Integer, Integer> {
 
+    // Declare static variables to switch between download results
     private static final int TYPE_SUCCESS = 0;
     private static final int TYPE_FAILED = 1;
     private static final int TYPE_PAUSED = 2;
     private static final int TYPE_CANCELED = 3;
+
 
     private DownloadListener downloadListener;
     private boolean isCanceled = false;
@@ -43,11 +45,12 @@ public class DownloadTask extends AsyncTask<String, Integer, Integer> {
             long downloadedLength = 0;
             String downloadUrl = strings[0];
             String fileName = "myJson";
+            // Save file in local directory
             File directory = context.getFilesDir();
             file = new File(directory, fileName);
 
             if(file.exists()) {
-                file.delete();
+                file.delete(); // Clear available files
                 downloadedLength = 0;
             }
 

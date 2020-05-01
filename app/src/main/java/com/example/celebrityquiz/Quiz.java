@@ -3,6 +3,7 @@ package com.example.celebrityquiz;
 import java.io.Serializable;
 
 // Bridge class connecting MainActivity with QuizAdapter
+// Serialize to extract objects from intent in SolutionActivity
 public class Quiz implements Serializable {
     String question;
     String imageUrl;
