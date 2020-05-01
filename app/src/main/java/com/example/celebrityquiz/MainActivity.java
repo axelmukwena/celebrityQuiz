@@ -9,10 +9,10 @@ import android.widget.RadioButton;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.Toolbar;
 
 public class MainActivity extends AppCompatActivity {
 
+    // Declare Variables
     private RadioButton radioButtonLevelOne;
     private RadioButton radioButtonLevelTwo;
     private RadioButton radioButtonLevelThree;
@@ -20,7 +20,6 @@ public class MainActivity extends AppCompatActivity {
     private RadioButton radioButton60;
     private RadioButton radioButton90;
     private ProgressBar progressBarDownload;
-    private Button buttonUpdate;
     private Button buttonStartQuiz;
     public int level;
     public int seconds;
@@ -29,11 +28,6 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
-        // Set toolbar
-        //Toolbar toolbar = findViewById(R.id.toolbar);
-        //setSupportActionBar(toolbar);
-
 
         radioButtonLevelOne = findViewById(R.id.radioButtonLevelOne);
         radioButtonLevelTwo = findViewById(R.id.radioButtonLevelTwo);
@@ -52,7 +46,7 @@ public class MainActivity extends AppCompatActivity {
         progressBarDownload = findViewById(R.id.progressBarDownload);
         progressBarDownload.setMax(100);
 
-        buttonUpdate = findViewById(R.id.buttonUpdate);
+        Button buttonUpdate = findViewById(R.id.buttonUpdate);
         buttonStartQuiz = findViewById(R.id.buttonStartQuiz);
         buttonUpdate.setEnabled(true);
         buttonStartQuiz.setEnabled(false);

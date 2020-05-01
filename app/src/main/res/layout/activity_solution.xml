@@ -5,17 +5,25 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     xmlns:tools="http://schemas.android.com/tools"
-    tools:context=".ScoreActivity">
+    tools:context=".SolutionActivity">
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recyclerView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
     <!-- Score view background -->
     <ImageView
         android:id="@+id/scoreViewBackground"
         android:layout_width="100dp"
         android:layout_height="100dp"
-        android:layout_marginTop="100dp"
+        android:layout_marginTop="70dp"
+        android:layout_marginEnd="30dp"
         android:contentDescription="@null"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:srcCompat="@drawable/button_rounded" />
 
@@ -36,52 +44,36 @@
         android:id="@+id/scoreTextView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="176dp"
-        android:layout_marginEnd="176dp"
         android:textColor="@color/colorPrimary"
         android:textSize="30sp"
         android:textStyle="bold"
         app:layout_constraintBottom_toTopOf="@+id/scoreViewDivider"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.487"
-        app:layout_constraintStart_toStartOf="parent" />
+        app:layout_constraintEnd_toEndOf="@+id/scoreViewBackground"
+        app:layout_constraintStart_toStartOf="@id/scoreViewBackground"/>
 
     <!-- Total Score view display -->
     <TextView
         android:id="@+id/scoreTotalTextView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="176dp"
-        android:layout_marginEnd="176dp"
         android:textColor="@color/colorPrimary"
         android:textSize="30sp"
         android:textStyle="bold"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.487"
-        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="@+id/scoreViewBackground"
+        app:layout_constraintStart_toStartOf="@id/scoreViewBackground"
         app:layout_constraintTop_toBottomOf="@+id/scoreViewDivider" />
 
     <!-- Well done view display -->
     <ImageView
         android:id="@+id/wellDoneImage"
-        android:layout_width="200dp"
-        android:layout_height="200dp"
-        android:layout_marginStart="106dp"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
         android:layout_marginTop="60dp"
-        android:layout_marginEnd="106dp"
+        android:layout_marginEnd="30dp"
         android:contentDescription="@null"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/scoreViewBackground"
         app:srcCompat="@drawable/well_done" />
-
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/recyclerView"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="50dp"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/wellDoneImage" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -7,38 +7,16 @@
     android:orientation="vertical"
     tools:context=".QuizActivity">
 
-    <!-- Timer Progress Bar -->
-    <ProgressBar
-        android:id="@+id/progressBarQuiz"
-        style="?android:attr/progressBarStyleHorizontal"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
-    <!-- Timer
-    <TextView
-        android:id="@+id/textTime"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="20dp"
-        android:gravity="center"
-        android:text="@string/textTime"
-        android:textColor="#FF5722"
-        android:textSize="18sp"
-        app:layout_constraintTop_toTopOf="parent" />
-    -->
-
     <!-- Question view -->
     <TextView
         android:id="@+id/celebrityQuestion"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="30dp"
         android:layout_marginStart="30dp"
+        android:layout_marginTop="40dp"
         android:textStyle="bold"
-        app:layout_constraintTop_toBottomOf="@+id/progressBarQuiz" />
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
     <!-- Celebrity image view -->
     <ImageView
@@ -121,12 +99,37 @@
         android:layout_marginTop="30dp"
         android:background="@drawable/button_rounded"
         android:elevation="2dp"
-        android:onClick="onButtonSubmit"
         android:text="@string/submit"
         android:textAllCaps="false"
         android:gravity="center"
         app:layout_constraintTop_toBottomOf="@+id/buttonNext"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent" />
+
+    <!-- Score view background -->
+    <ImageView
+        android:id="@+id/scoreViewBackground"
+        android:layout_width="80dp"
+        android:layout_height="80dp"
+        android:layout_marginTop="30dp"
+        android:contentDescription="@null"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/buttonSubmit"
+        app:srcCompat="@drawable/button_rounded" />
+
+    <!-- Timer -->
+    <TextView
+        android:id="@+id/textTime"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:textColor="@color/colorPrimary"
+        android:textSize="30sp"
+        android:textStyle="bold"
+        app:layout_constraintTop_toTopOf="@+id/scoreViewBackground"
+        app:layout_constraintBottom_toBottomOf="@+id/scoreViewBackground"
+        app:layout_constraintEnd_toEndOf="@+id/scoreViewBackground"
+        app:layout_constraintStart_toStartOf="@id/scoreViewBackground"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -6,7 +6,6 @@ import android.os.CountDownTimer;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
-import android.widget.ProgressBar;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.TextView;
@@ -23,6 +22,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.lang.reflect.Type;
 import java.nio.charset.StandardCharsets;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
@@ -30,11 +30,9 @@ public class QuizActivity extends AppCompatActivity {
 
     // Declare variables
     private List<Quiz> quizList;
-    private int level;
     private int seconds;
     private int indexCurrentQuestion;
 
-    private ProgressBar progressBarQuiz;
     private TextView questionView;
     private ImageView imageView;
     private RadioGroup radioGroup;
@@ -44,6 +42,7 @@ public class QuizActivity extends AppCompatActivity {
     private RadioButton radioButtonFour;
     private Button buttonPrevious;
     private Button buttonNext;
+    private TextView textTime;
     private CountDownTimer countDownTimer;
 
     @Override
@@ -53,7 +52,6 @@ public class QuizActivity extends AppCompatActivity {
 
         Objects.requireNonNull(getSupportActionBar()).hide();
 
-        progressBarQuiz = findViewById(R.id.progressBarQuiz);
         questionView = findViewById(R.id.celebrityQuestion);
         imageView = findViewById(R.id.celebrityImage);
         radioGroup = findViewById(R.id.celebrityOption);
@@ -61,6 +59,7 @@ public class QuizActivity extends AppCompatActivity {
         radioButtonTwo = findViewById(R.id.radioButtonTwo);
         radioButtonThree = findViewById(R.id.radioButtonThree);
         radioButtonFour = findViewById(R.id.radioButtonFour);
+        textTime = findViewById(R.id.textTime);
 
         radioButtonOne.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -98,7 +97,7 @@ public class QuizActivity extends AppCompatActivity {
         buttonPrevious = findViewById(R.id.buttonPrevious);
 
         Intent intent = getIntent();
-        level = intent.getIntExtra("level", 0);
+        int level = intent.getIntExtra("level", 0);
         seconds = intent.getIntExtra("seconds", 30);
         String string = null;
 
@@ -143,9 +142,11 @@ public class QuizActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 stopTimer();
-                int score = getScore();
-                Intent i = new Intent(QuizActivity.this, ScoreActivity.class);
-                i.putExtra("score", score);
+                Intent i = new Intent(QuizActivity.this, SolutionActivity.class);
+                i.putExtra("score", getScore());
+                // Change List to ArrayList to accommodate subList
+                ArrayList<Quiz> list = new ArrayList<>(quizList);
+                i.putExtra("quizList", list);
                 i.setFlags(Intent. FLAG_ACTIVITY_CLEAR_TOP | Intent. FLAG_ACTIVITY_SINGLE_TOP );
                 startActivity(i);
             }
@@ -153,20 +154,20 @@ public class QuizActivity extends AppCompatActivity {
     }
 
     public void startTimer() {
-        progressBarQuiz.setProgress(seconds);
+        textTime.setText(String.valueOf(seconds));
         countDownTimer = new CountDownTimer(seconds * 1000, 1000) {
             @Override
             public void onTick(long millisUntilFinished) {
-                progressBarQuiz.setProgress((int) (millisUntilFinished / 1000));
+                textTime.setText(String.valueOf((int) (millisUntilFinished / 1000)));
             }
 
             @Override
             public void onFinish() {
-                progressBarQuiz.setProgress(0);
                 int score = getScore();
-                Intent i = new Intent(QuizActivity.this, ScoreActivity.class);
+                Intent i = new Intent(QuizActivity.this, SolutionActivity.class);
                 i.putExtra("score", score);
-                i.putExtra("level", level);
+                ArrayList<Quiz> list = new ArrayList<>(quizList);
+                i.putExtra("quizList", list);
                 i.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
                 startActivity(i);
             }

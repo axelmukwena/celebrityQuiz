@@ -1,7 +1,9 @@
 package com.example.celebrityquiz;
 
+import java.io.Serializable;
+
 // Bridge class connecting MainActivity with QuizAdapter
-public class Quiz{
+public class Quiz implements Serializable {
     String question;
     String imageUrl;
     String one;

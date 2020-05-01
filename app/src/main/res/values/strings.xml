@@ -18,7 +18,7 @@
     <string name="scoreContent">This is your score</string>
     <string name="scoreHeader">Score</string>
 
-    <string name="textTime">You have 30 seconds</string>
+    <string name="textTime">30</string>
     <string name="previous">Previous</string>
     <string name="next">Next</string>
     <string name="submit">Submit</string>

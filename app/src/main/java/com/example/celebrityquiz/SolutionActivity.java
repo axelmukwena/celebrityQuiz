@@ -1,31 +1,27 @@
 package com.example.celebrityquiz;
 
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.Toolbar;
-import androidx.core.app.NavUtils;
-import androidx.preference.PreferenceManager;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
-import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
-import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 
-public class ScoreActivity extends AppCompatActivity{
-
-    private int scoreValue;
+public class SolutionActivity extends AppCompatActivity{
+    private List<Quiz> quizList;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_score);
+        setContentView(R.layout.activity_solution);
 
+        // Navigation
         Objects.requireNonNull(getSupportActionBar()).setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setHomeButtonEnabled(true);
 
@@ -33,9 +29,9 @@ public class ScoreActivity extends AppCompatActivity{
             getSupportActionBar().setTitle("Results");
         }
 
-        // Interface instance to access score value from QuizActivity
-        scoreValue = getIntent().getIntExtra("score", 0);
-        int level = getIntent().getIntExtra("level", 1);
+        // Interface instance to get values from QuizActivity
+        int scoreValue = getIntent().getIntExtra("score", 0);
+        quizList = (List<Quiz>) getIntent().getSerializableExtra("quizList");
 
         // Set view and display scoreValue
         TextView scoreView = findViewById(R.id.scoreTextView);
@@ -43,6 +39,12 @@ public class ScoreActivity extends AppCompatActivity{
 
         // See function
         displayWellDone(scoreValue);
+
+        // RecycleView definitions
+        RecyclerView recyclerView = findViewById(R.id.recyclerView);
+        SolutionAdapter solutionAdapter = new SolutionAdapter(quizList, this);
+        recyclerView.setLayoutManager(new LinearLayoutManager(this));
+        recyclerView.setAdapter(solutionAdapter);
     }
 
     // Function to display well done image if user gets all correct | also settings for total value
