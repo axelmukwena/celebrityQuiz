@@ -10,7 +10,6 @@ import android.widget.ProgressBar;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -25,6 +24,7 @@ import java.io.InputStreamReader;
 import java.lang.reflect.Type;
 import java.nio.charset.StandardCharsets;
 import java.util.List;
+import java.util.Objects;
 
 public class QuizActivity extends AppCompatActivity {
 
@@ -44,11 +44,14 @@ public class QuizActivity extends AppCompatActivity {
     private RadioButton radioButtonFour;
     private Button buttonPrevious;
     private Button buttonNext;
+    private CountDownTimer countDownTimer;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate((savedInstanceState));
         setContentView(R.layout.activity_quiz);
+
+        Objects.requireNonNull(getSupportActionBar()).hide();
 
         progressBarQuiz = findViewById(R.id.progressBarQuiz);
         questionView = findViewById(R.id.celebrityQuestion);
@@ -111,7 +114,6 @@ public class QuizActivity extends AppCompatActivity {
             string = stringBuilder.toString();
         } catch (IOException e) {
             e.printStackTrace();
-            Toast.makeText(this, "downloaded file cannot be found", Toast.LENGTH_SHORT).show();
         }
 
         Gson gson = new Gson();
@@ -134,9 +136,25 @@ public class QuizActivity extends AppCompatActivity {
         currentQuestionView(currentQuestion);
         buttonPrevious.setEnabled(false);
 
-        progressBarQuiz.setProgress(seconds);
+        startTimer();
 
-        final CountDownTimer countDownTimer = new CountDownTimer(seconds * 1000, 1000) {
+        Button buttonSubmit = findViewById(R.id.buttonSubmit);
+        buttonSubmit.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                stopTimer();
+                int score = getScore();
+                Intent i = new Intent(QuizActivity.this, ScoreActivity.class);
+                i.putExtra("score", score);
+                i.setFlags(Intent. FLAG_ACTIVITY_CLEAR_TOP | Intent. FLAG_ACTIVITY_SINGLE_TOP );
+                startActivity(i);
+            }
+        });
+    }
+
+    public void startTimer() {
+        progressBarQuiz.setProgress(seconds);
+        countDownTimer = new CountDownTimer(seconds * 1000, 1000) {
             @Override
             public void onTick(long millisUntilFinished) {
                 progressBarQuiz.setProgress((int) (millisUntilFinished / 1000));
@@ -146,7 +164,6 @@ public class QuizActivity extends AppCompatActivity {
             public void onFinish() {
                 progressBarQuiz.setProgress(0);
                 int score = getScore();
-                Toast.makeText(QuizActivity.this, "Score: " + score, Toast.LENGTH_SHORT).show();
                 Intent i = new Intent(QuizActivity.this, ScoreActivity.class);
                 i.putExtra("score", score);
                 i.putExtra("level", level);
@@ -154,6 +171,9 @@ public class QuizActivity extends AppCompatActivity {
                 startActivity(i);
             }
         }.start();
+    }
+
+    public void stopTimer() {
         countDownTimer.cancel();
     }
 
@@ -221,14 +241,6 @@ public class QuizActivity extends AppCompatActivity {
                 }
             }
         }
-    }
-
-    public void onButtonSubmit(View view) {
-        int score = getScore();
-        Intent i = new Intent(QuizActivity.this, ScoreActivity.class);
-        i.putExtra("score", score);
-        i.setFlags(Intent. FLAG_ACTIVITY_CLEAR_TOP | Intent. FLAG_ACTIVITY_SINGLE_TOP );
-        startActivity(i);
     }
 
     public void currentQuestionView(Quiz currentQuestion) {

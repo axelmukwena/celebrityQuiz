@@ -31,8 +31,9 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         // Set toolbar
-        Toolbar toolbar = findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
+        //Toolbar toolbar = findViewById(R.id.toolbar);
+        //setSupportActionBar(toolbar);
+
 
         radioButtonLevelOne = findViewById(R.id.radioButtonLevelOne);
         radioButtonLevelTwo = findViewById(R.id.radioButtonLevelTwo);
